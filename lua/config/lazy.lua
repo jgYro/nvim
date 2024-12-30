@@ -80,6 +80,7 @@ require("lazy").setup({
       vim.keymap.set("n", "<space>ff", "<cmd>Telescope find_files<CR>", { desc = "Find Files" })
       vim.keymap.set("n", "<space>fd", "<cmd>Telescope diagnostics<CR>", { desc = "Find Diagnostics" })
       vim.keymap.set("n", "<space>fq", "<cmd>Telescope quickfix<CR>", { desc = "Find Quickfix" })
+      vim.keymap.set("n", "<space>sp", "<cmd>Telescope spell_suggest<CR>", { desc = "Spelling Suggestion" })
       -- This is your opts table
       require("telescope").setup {
         extensions = {
@@ -218,5 +219,14 @@ require("lazy").setup({
   },
   {
     'nvim-telescope/telescope-ui-select.nvim',
+  },
+  {
+    "folke/flash.nvim",
+    event = "VeryLazy",
+    opts = {},
+    keys = {
+      { "s",     mode = { "n", "x", "o" }, function() require("flash").jump() end,              desc = "Flash" },
+      { "S",     mode = { "n", "x", "o" }, function() require("flash").treesitter() end,        desc = "Flash Treesitter" },
+    },
   }
 })

@@ -1,6 +1,9 @@
 -----------------------
 ---- Neovim Keymaps ----
 ------------------------
+-- Emacs insert mode delete
+vim.keymap.set("i", "<a-BS>", "<c-w>")
+
 -- Execute (Source) file
 vim.keymap.set("n", "<space><space>x","<cmd>source %<CR>")
 
