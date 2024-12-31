@@ -76,6 +76,9 @@ vim.keymap.set('n', '<space>d', '<cmd>:lua vim.diagnostic.open_float()<CR>')
 -- Open diagnostic fully
 vim.keymap.set('n', '<space><space>f', '<cmd>:lua vim.lsp.buf.format()<CR>')
 
+-- Toggle inaly hints
+vim.keymap.set('n', '<space><space>i', '<cmd>:lua vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())<CR>')
+
 -- Toggle word wrap
 vim.keymap.set('n', '<space><space>w', function()
   if vim.wo.wrap then

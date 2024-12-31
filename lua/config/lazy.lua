@@ -187,7 +187,7 @@ require("lazy").setup({
       local lspconfig = require('lspconfig')
       lspconfig.rust_analyzer.setup {
         filetypes = { "rust" },
-        on_attach = function(client, bufnr)
+        on_attach = function(_, bufnr)
           vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
         end,
         settings = {
