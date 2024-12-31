@@ -5,16 +5,16 @@
 vim.keymap.set("i", "<a-BS>", "<c-w>")
 
 -- Execute (Source) file
-vim.keymap.set("n", "<space><space>x","<cmd>source %<CR>")
+vim.keymap.set("n", "<space><space>x", "<cmd>source %<CR>")
 
 -- Remap netrw mode in vim
 vim.keymap.set("n", "<space>e", "<cmd>Explore<CR>")
 
 -- Execute line
-vim.keymap.set("n", "<space>x",":.lua<CR>")
+vim.keymap.set("n", "<space>x", ":.lua<CR>")
 
 -- Execute selection
-vim.keymap.set("v", "<space>x",":lua<CR>")
+vim.keymap.set("v", "<space>x", ":lua<CR>")
 
 -- Helix movement
 vim.keymap.set({ "n", "v" }, "gh", "_")
@@ -73,31 +73,34 @@ vim.keymap.set("n", "gd", "<cmd>:lua vim.lsp.buf.definition()<CR>")
 -- Open diagnostic fully
 vim.keymap.set('n', '<space>d', '<cmd>:lua vim.diagnostic.open_float()<CR>')
 
+-- Open diagnostic fully
+vim.keymap.set('n', '<space><space>f', '<cmd>:lua vim.lsp.buf.format()<CR>')
+
 -- Toggle word wrap
 vim.keymap.set('n', '<space><space>w', function()
-	if vim.wo.wrap then
-		vim.wo.wrap = false
-		vim.cmd('echo "Word wrapping OFF"')
-	else
-		vim.wo.wrap = true
-		vim.cmd('echo "Word wrapping ON"')
-	end
+  if vim.wo.wrap then
+    vim.wo.wrap = false
+    vim.cmd('echo "Word wrapping OFF"')
+  else
+    vim.wo.wrap = true
+    vim.cmd('echo "Word wrapping ON"')
+  end
 end)
 
 
 -- Toggle cursor column and line
 vim.keymap.set("n", "<space><space>X", function()
   if vim.o.cursorline then
-		vim.o.cursorline = false
-	else
-		vim.o.cursorline = true
+    vim.o.cursorline = false
+  else
+    vim.o.cursorline = true
   end
 
   if vim.o.cursorcolumn then
-		vim.o.cursorcolumn = false
-	else
-		vim.o.cursorcolumn = true
-	end
+    vim.o.cursorcolumn = false
+  else
+    vim.o.cursorcolumn = true
+  end
 end)
 
 ------------------------

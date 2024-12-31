@@ -1,3 +1,4 @@
+---@diagnostic disable: missing-fields
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -32,7 +33,7 @@ require("lazy").setup({
           float_bg = "require('onedarkpro.helpers').lighten('bg', 10, 'onedark_dark')",
         },
         highlights = {
-          NormalFloat = { bg = "${float_bg}" },
+        NormalFloat = { bg = "${float_bg}" },
           Comment = { italic = true },
           Directory = { bold = true },
           ErrorMsg = { italic = true, bold = true }
@@ -130,10 +131,24 @@ require("lazy").setup({
       local configs = require("nvim-treesitter.configs")
 
       configs.setup({
+      ---@diagnostic disable-next-line: missing-fields
         ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "rust", "bash", "javascript", "html" },
         sync_install = false,
         highlight = { enable = true },
         indent = { enable = true },
+        rainbow = {
+          enable = true,
+          extended_mode = true,
+        },
+        incremental_selection = {
+          enable = true,
+          keymaps = {
+            init_selection = "<a-n>",
+            node_incremental = "<a-n>",
+            scope_incremental = "<c-s>",
+            node_decremental = "<a-p>",
+          },
+        },
       })
     end
   },
