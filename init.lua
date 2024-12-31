@@ -62,7 +62,27 @@ vim.keymap.set("n", "gn", ":tabnext<CR>")
 vim.keymap.set("n", "gp", ":tabprevious<CR>")
 
 -- LSP code action
-vim.keymap.set("n", "<space>a", "<cmd>vim.lsp.buf.code_action<CR>")
+vim.keymap.set("n", "<space>a", "<cmd>:lua vim.lsp.buf.code_action()<CR>")
+
+-- LSP hover
+vim.keymap.set("n", "<space>k", "<cmd>:lua vim.lsp.buf.hover()<CR>")
+
+-- Go to definition
+vim.keymap.set("n", "gd", "<cmd>:lua vim.lsp.buf.definition()<CR>")
+
+-- Open diagnostic fully
+vim.keymap.set('n', '<space>d', '<cmd>:lua vim.diagnostic.open_float()<CR>')
+
+-- Toggle word wrap
+vim.keymap.set('n', '<space><space>w', function()
+	if vim.wo.wrap then
+		vim.wo.wrap = false
+		vim.cmd('echo "Word wrapping OFF"')
+	else
+		vim.wo.wrap = true
+		vim.cmd('echo "Word wrapping ON"')
+	end
+end)
 
 
 -- Toggle cursor column and line
