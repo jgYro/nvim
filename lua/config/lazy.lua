@@ -591,4 +591,16 @@ require("lazy").setup({
       },
     },
   },
+  {
+    "ziontee113/icon-picker.nvim",
+    config = function()
+      require("icon-picker").setup({ disable_legacy_commands = true })
+
+      local opts = { noremap = true, silent = true }
+
+      vim.keymap.set("n", "<Leader><Leader>i", "<cmd>IconPickerNormal<cr>", {desc = "Pick Icon"})
+      vim.keymap.set("n", "<Leader><Leader>y", "<cmd>IconPickerYank<cr>", {desc = "Yank Icon"})   --> Yank the selected icon into register
+      vim.keymap.set("i", "<C-i>", "<cmd>IconPickerInsert<cr>", { desc = "Add Icon in insert mode" })
+    end
+  }
 })
