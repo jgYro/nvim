@@ -23,9 +23,6 @@ vim.keymap.set({ "n", "v" }, "gl", "$")
 -- Copy to system clipboard
 vim.keymap.set({ "n", "v" }, "<leader>y", [["*y]])
 
--- Telescope
-vim.keymap.set("n", "<space><space>t", ":Telescope<CR>")
-
 -- Open new window with terminal
 vim.keymap.set("n", "<space>t", function()
   vim.cmd.vnew()
@@ -38,10 +35,6 @@ vim.keymap.set('t', '<C-t>', "<C-\\><C-n>")
 
 -- Copy selection to clipboard
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
-
--- Splits
-vim.keymap.set("n", "<C-w>|", "<cmd>:vsplit<CR>")
-vim.keymap.set("n", "<C-w>-", "<cmd>:split<CR>")
 
 -- Helix movement
 vim.keymap.set({ "n", "v" }, "gh", "_")
@@ -62,10 +55,7 @@ vim.keymap.set("n", "gn", ":tabnext<CR>")
 vim.keymap.set("n", "gp", ":tabprevious<CR>")
 
 -- LSP code action
-vim.keymap.set("n", "<space>a", "<cmd>:lua vim.lsp.buf.code_action()<CR>")
-
--- LSP hover
-vim.keymap.set("n", "<space>k", "<cmd>:lua vim.lsp.buf.hover()<CR>")
+vim.keymap.set("n", "<space>ca", "<cmd>:lua vim.lsp.buf.code_action()<CR>")
 
 -- Go to definition
 vim.keymap.set("n", "gd", "<cmd>:lua vim.lsp.buf.definition()<CR>")
@@ -111,9 +101,6 @@ end)
 ------------------------
 -- Set line numbers
 vim.opt.nu = true
-
--- Cursor change
-vim.opt.guicursor = ""
 
 -- Set relative line numbers
 vim.opt.relativenumber = true
@@ -167,3 +154,88 @@ vim.opt.shiftwidth = 2
 ------------------------
 -- Import Package Manager
 require("config.lazy")
+
+
+------------------------
+------ Neovim LSP ------
+------ (No Rust) -------
+------------------------
+vim.lsp.config['luals'] = {
+  -- Command and arguments to start the server.
+  cmd = { 'lua-language-server' },
+  -- Filetypes to automatically attach to.
+  filetypes = { 'lua' },
+  -- Sets the "root directory" to the parent directory of the file in the
+  -- current buffer that contains either a ".luarc.json" or a
+  -- ".luarc.jsonc" file. Files that share a root directory will reuse
+  -- the connection to the same LSP server.
+  -- Nested lists indicate equal priority, see |vim.lsp.Config|.
+  root_markers = { { '.luarc.json', '.luarc.jsonc' }, '.git' },
+  -- Specific settings to send to the server. The schema for this is
+  -- defined by the server. For example the schema for lua-language-server
+  -- can be found here https://raw.githubusercontent.com/LuaLS/vscode-lua/master/setting/schema.json
+  settings = {
+    Lua = {
+      runtime = {
+        version = 'LuaJIT',
+      }
+    }
+  }
+}
+vim.lsp.enable('luals')
+
+vim.lsp.config['rust'] = {
+  -- Command and arguments to start the server.
+  cmd = { 'rust-analyzer' },
+  -- Filetypes to automatically attach to.
+  filetypes = { 'rust' },
+  -- Sets the "root directory" to the parent directory of the file in the
+  -- current buffer that contains a Cargo.toml file or a .git directory.
+  root_markers = { 'Cargo.toml', '.git' },
+  -- Specific settings to send to the server. The schema for this is
+  -- defined by the server.
+  settings = {
+    ["rust-analyzer"] = {
+      cargo = {
+        allFeatures = true,
+      },
+    }
+  }
+}
+
+vim.lsp.enable('rust')
+
+vim.lsp.config['python'] = {
+  -- Command and arguments to start the server.
+  cmd = { "basedpyright-langserver", "--stdio" },
+  -- Filetypes to automatically attach to.
+  filetypes = { 'python' },
+  -- Sets the "root directory" to the parent directory of the file in the
+  -- current buffer that contains a Cargo.toml file or a .git directory.
+  root_markers = { 'venv', '.venv', '.git' },
+  -- Specific settings to send to the server. The schema for this is
+  -- defined by the server.
+  settings = {
+    python = {
+      venvPath = vim.fn.expand("~") .. "/.virtualenvs",
+    },
+    basedpyright = {
+      disableOrganizeImports = true,
+      analysis = {
+        autoSearchPaths = true,
+        autoImportCompletions = true,
+        useLibraryCodeForTypes = true,
+        diagnosticMode = "openFilesOnly",
+        typeCheckingMode = "strict",
+        inlayHints = {
+          variableTypes = true,
+          callArgumentNames = true,
+          functionReturnTypes = true,
+          genericTypes = false,
+        },
+      },
+    },
+  },
+}
+
+vim.lsp.enable('python')
