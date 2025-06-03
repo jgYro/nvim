@@ -265,7 +265,44 @@ vim.lsp.config['tsserver'] = {
   cmd = { "typescript-language-server", "--stdio" },
   filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact", "tsx", "jsx" },
   root_markers = { "package.json", "tsconfig.json", "jsconfig.json", ".git" },
-  settings = {}
+  settings = {
+    typescript = {
+      format = {
+        indentSize = 2,
+        insertSpaceAfterCommaDelimiter = true,
+        semicolons = "always",
+      },
+      preferences = {
+        importModuleSpecifierPreference = "non-relative",
+        quotePreference = "single",
+      },
+      inlayHints = {
+        enumMemberValues = { enabled = true },
+        functionLikeReturnTypes = { enabled = true },
+        propertyDeclarationTypes = { enabled = true },
+        parameterNames = { enabled = "all", suppressWhenArgumentMatchesName = true },
+        variableTypes = { enabled = true },
+      },
+    },
+    javascript = {
+      format = {
+        indentSize = 2,
+        insertSpaceAfterCommaDelimiter = true,
+        semicolons = "always",
+      },
+      preferences = {
+        importModuleSpecifierPreference = "non-relative",
+        quotePreference = "single",
+      },
+      inlayHints = {
+        enumMemberValues = { enabled = true },
+        functionLikeReturnTypes = { enabled = true },
+        propertyDeclarationTypes = { enabled = true },
+        parameterNames = { enabled = "all", suppressWhenArgumentMatchesName = true },
+        variableTypes = { enabled = true },
+      },
+    },
+  },
 
 }
 
@@ -274,8 +311,8 @@ vim.lsp.enable('tsserver')
 vim.lsp.config['tailwind'] = {
   cmd = { "tailwindcss-language-server", "--stdio" },
   filetypes = { "css", "scss", "html", "javascript", "javascriptreact", "typescript", "typescriptreact", "vue" },
-  root_markers = { "tailwind.config.js", "tailwind.config.cjs", "tailwind.config.ts", ".git" },
   settings = {
+    root_markers = { "tailwind.config.js", "tailwind.config.cjs", "tailwind.config.ts", ".git" },
   },
 }
 

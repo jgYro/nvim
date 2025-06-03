@@ -51,7 +51,7 @@ require("lazy").setup({
 
       configs.setup({
         ---@diagnostic disable-next-line: missing-fields
-        ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "rust", "bash", "javascript", "html", "javascript", "python", "regex", "toml", "yaml", "json", "markdown", "markdown_inline" },
+        ensure_installed = { "tsx", "c", "lua", "vim", "vimdoc", "query", "rust", "bash", "javascript", "html", "javascript", "python", "regex", "toml", "yaml", "json", "markdown", "markdown_inline" },
         sync_install = false,
         highlight = { enable = true, additional_vim_regex_highlighting = { 'org' },
         },
