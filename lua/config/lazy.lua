@@ -285,6 +285,9 @@ require("lazy").setup({
             ["<C-d>"] = "preview-page-down",
             ["<C-u>"] = "preview-page-up",
           },
+          fzf = {
+            ["ctrl-q"] = "select-all+accept",
+          }
         },
       })
       vim.keymap.set({ "n", "x", "o" }, "s", ":FzfLua<cr>", {
@@ -598,8 +601,8 @@ require("lazy").setup({
 
       local opts = { noremap = true, silent = true }
 
-      vim.keymap.set("n", "<Leader><Leader>i", "<cmd>IconPickerNormal<cr>", {desc = "Pick Icon"})
-      vim.keymap.set("n", "<Leader><Leader>y", "<cmd>IconPickerYank<cr>", {desc = "Yank Icon"})   --> Yank the selected icon into register
+      vim.keymap.set("n", "<Leader><Leader>i", "<cmd>IconPickerNormal<cr>", { desc = "Pick Icon" })
+      vim.keymap.set("n", "<Leader><Leader>y", "<cmd>IconPickerYank<cr>", { desc = "Yank Icon" }) --> Yank the selected icon into register
       vim.keymap.set("i", "<C-i>", "<cmd>IconPickerInsert<cr>", { desc = "Add Icon in insert mode" })
     end
   }

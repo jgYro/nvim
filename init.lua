@@ -21,7 +21,12 @@ vim.keymap.set({ "n", "v" }, "gh", "_")
 vim.keymap.set({ "n", "v" }, "gl", "$")
 
 -- Copy to system clipboard
-vim.keymap.set({ "n", "v" }, "<leader>y", [["*y]])
+vim.keymap.set({ "v" }, "<leader>y", '"*y')
+vim.keymap.set("n", "<leader>y", '"*yy', { noremap = true, silent = true })
+
+-- Quickfix
+vim.keymap.set("n", "Lq", ":cnext<CR>")
+vim.keymap.set("n", "Hq", ":cprevious<CR>")
 
 -- Open new window with terminal
 vim.keymap.set("n", "<space>t", function()
@@ -160,6 +165,14 @@ require("config.lazy")
 ------ Neovim LSP ------
 ------ (No Rust) -------
 ------------------------
+vim.diagnostic.config({
+  virtual_lines = {
+    current_line = true,
+  },
+})
+--
+-- lua
+--
 vim.lsp.config['luals'] = {
   -- Command and arguments to start the server.
   cmd = { 'lua-language-server' },
@@ -183,6 +196,9 @@ vim.lsp.config['luals'] = {
   }
 }
 vim.lsp.enable('luals')
+--
+-- Rust
+--
 
 vim.lsp.config['rust'] = {
   -- Command and arguments to start the server.
@@ -205,6 +221,9 @@ vim.lsp.config['rust'] = {
 
 vim.lsp.enable('rust')
 
+--
+-- Python
+--
 vim.lsp.config['python'] = {
   -- Command and arguments to start the server.
   cmd = { "basedpyright-langserver", "--stdio" },
@@ -239,3 +258,25 @@ vim.lsp.config['python'] = {
 }
 
 vim.lsp.enable('python')
+--
+-- web dev
+--
+vim.lsp.config['tsserver'] = {
+  cmd = { "typescript-language-server", "--stdio" },
+  filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact", "tsx", "jsx" },
+  root_markers = { "package.json", "tsconfig.json", "jsconfig.json", ".git" },
+  settings = {}
+
+}
+
+vim.lsp.enable('tsserver')
+
+vim.lsp.config['tailwind'] = {
+  cmd = { "tailwindcss-language-server", "--stdio" },
+  filetypes = { "css", "scss", "html", "javascript", "javascriptreact", "typescript", "typescriptreact", "vue" },
+  root_markers = { "tailwind.config.js", "tailwind.config.cjs", "tailwind.config.ts", ".git" },
+  settings = {
+  },
+}
+
+vim.lsp.enable('tailwind')
