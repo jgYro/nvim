@@ -150,10 +150,14 @@ Most LSP keymaps are Neovim defaults (no custom mapping needed):
 | `<C-s>` (insert) | Signature help |
 | `[d` / `]d` | Previous / next diagnostic |
 | `gd` | Go to definition *(custom)* |
+| `<leader>k` | Hover documentation *(custom)* |
 | `<leader>d` | Show diagnostic float *(custom)* |
+| `Ld` / `Hd` | Next / previous diagnostic *(custom)* |
 
-Completion (blink, `default` preset): `<C-y>` accept, `<C-n>`/`<C-p>` select,
-`<C-space>` open menu / docs, `<C-e>` hide. (`<C-k>` is left to Copilot.)
+Completion (blink, `default` preset): `<CR>` accepts a selected item (nothing
+is auto-selected, so Enter is still a newline otherwise), `<C-y>` accepts the
+top item directly, `<C-n>`/`<C-p>` select, `<C-space>` open menu / docs,
+`<C-e>` hide. (`<C-k>` is left to Copilot.)
 
 **Enabled servers** (binary must be installed — see the note atop each
 `lsp/<name>.lua`): `lua_ls`, `rust_analyzer`, `dartls`, `pyright`, `gopls`,

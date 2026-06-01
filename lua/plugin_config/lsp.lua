@@ -21,12 +21,17 @@
 -- Completion engine.
 require("blink.cmp").setup({
   keymap = {
-    -- <C-y> accept · <C-n>/<C-p> select · <C-space> menu/docs · <C-e> hide.
+    -- <C-y> accept top · <C-n>/<C-p> select · <C-space> menu/docs · <C-e> hide.
     preset = "default",
+    -- Enter accepts the selected item, else falls through to a normal newline.
+    ["<CR>"] = { "accept", "fallback" },
     -- Leave <C-k> to copilot (previous suggestion). Signature help is still
     -- available on the native <C-s> insert-mode mapping.
     ["<C-k>"] = { "fallback" },
   },
+  -- Don't auto-highlight the first item (Helix-style): so Enter only accepts
+  -- an item you've explicitly selected and otherwise inserts a newline.
+  completion = { list = { selection = { preselect = false } } },
   appearance = { nerd_font_variant = "mono" },
   sources = { default = { "lsp", "path", "snippets", "buffer" } },
   -- Use the Rust fuzzy matcher (prebuilt binary via the pinned tag), falling
@@ -62,6 +67,16 @@ vim.lsp.enable({
 -- "follow TOC link" (buffer-local), which correctly wins there.
 vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
 vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, { desc = "Show diagnostic" })
+-- <leader>k = hover docs (mirrors helix's <space>k).
+vim.keymap.set("n", "<leader>k", vim.lsp.buf.hover, { desc = "Hover documentation" })
+
+-- Step through diagnostics, matching the Lq/Hq quickfix idiom.
+vim.keymap.set("n", "Ld", function()
+  vim.diagnostic.jump({ count = 1, float = true })
+end, { desc = "Next diagnostic" })
+vim.keymap.set("n", "Hd", function()
+  vim.diagnostic.jump({ count = -1, float = true })
+end, { desc = "Prev diagnostic" })
 
 -- Diagnostics (native).
 vim.diagnostic.config({
