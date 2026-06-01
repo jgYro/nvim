@@ -14,6 +14,10 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
+-- Use 24-bit (true) colors in the terminal. Required for modern
+-- colorschemes like oh-lucy to render correctly.
+vim.opt.termguicolors = true
+
 -- Line numbers: absolute on the cursor line, relative elsewhere (great
 -- for counting motions like 5j).
 vim.opt.nu = true

@@ -46,6 +46,7 @@ lua/
 | [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) + [plenary.nvim](https://github.com/nvim-lua/plenary.nvim) | Fuzzy finder |
 | [harpoon](https://github.com/ThePrimeagen/harpoon) (v1) | Quick file marks and jumps |
 | [flash.nvim](https://github.com/folke/flash.nvim) | Label-based motion (avy-style jump on `s`, plus `f`/`t` and search labels) |
+| [oh-lucy.nvim](https://github.com/Yazeed1s/oh-lucy.nvim) | Colorscheme (`oh-lucy` variant) |
 
 ## Keybindings
 

@@ -34,6 +34,8 @@ vim.pack.add({
   { src = "https://github.com/theprimeagen/harpoon", version = "master" },
   -- flash: label-based motion (used only for its jump, bound to `s`).
   { src = "https://github.com/folke/flash.nvim" },
+  -- oh-lucy: colorscheme.
+  { src = "https://github.com/Yazeed1s/oh-lucy.nvim" },
 })
 
 --
@@ -45,3 +47,5 @@ require("plugin_config.which-key")
 require("plugin_config.telescope")
 require("plugin_config.harpoon")
 require("plugin_config.flash")
+-- Colorscheme last, so it themes everything loaded above.
+require("plugin_config.oh-lucy")
