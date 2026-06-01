@@ -28,3 +28,17 @@ require("flash").setup({
 vim.keymap.set({ "n", "x", "o" }, "s", function()
   require("flash").jump()
 end, { desc = "Flash jump" })
+
+-- By default FlashLabel links to Substitute, which oh-lucy renders as a
+-- muted pink with dim text -> the jump labels are very hard to read. Force a
+-- deliberately clashing, maximum-contrast label (black on bright yellow)
+-- that pops against oh-lucy's dark background. Re-applied on every
+-- ColorScheme load so it survives the initial theme load and theme switches.
+local function set_flash_hl()
+  vim.api.nvim_set_hl(0, "FlashLabel", { fg = "#000000", bg = "#ffff00", bold = true })
+end
+vim.api.nvim_create_autocmd("ColorScheme", {
+  group = vim.api.nvim_create_augroup("flash_label_hl", { clear = true }),
+  callback = set_flash_hl,
+})
+set_flash_hl()
