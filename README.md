@@ -46,6 +46,10 @@ lua/
 | [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) + [plenary.nvim](https://github.com/nvim-lua/plenary.nvim) | Fuzzy finder |
 | [harpoon](https://github.com/ThePrimeagen/harpoon) (v1) | Quick file marks and jumps |
 | [flash.nvim](https://github.com/folke/flash.nvim) | Label-based motion (avy-style jump on `s`, plus `f`/`t` and search labels) |
+| [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter) (main) | Treesitter parsers + highlighting |
+| [nvim-treesitter-textobjects](https://github.com/nvim-treesitter/nvim-treesitter-textobjects) (main) | Treesitter-based textobjects (select / move) |
+| [treesitter-modules.nvim](https://github.com/MeanderingProgrammer/treesitter-modules.nvim) | Highlight / indent / incremental-selection modules on the treesitter main branch |
+| [render-markdown.nvim](https://github.com/MeanderingProgrammer/render-markdown.nvim) | In-buffer markdown rendering (raw while editing, formatted in normal mode) |
 | [oh-lucy.nvim](https://github.com/Yazeed1s/oh-lucy.nvim) | Colorscheme (`oh-lucy` variant) |
 
 ## Keybindings
@@ -95,6 +99,33 @@ Leader is `<Space>`.
 | `s` | n, x, o | Avy-style jump: type chars, press a label to jump |
 | `f` / `F` / `t` / `T` | n, x, o | Char motions, enhanced with jump labels |
 | `/` / `?` | n | Search, enhanced with jump labels |
+
+### Treesitter textobjects
+
+Select (visual / operator-pending, e.g. `vif`, `daf`):
+
+| Key | Textobject |
+| --- | --- |
+| `af` / `if` | Function outer / inner |
+| `ac` / `ic` | Class outer / inner |
+| `aa` / `ia` | Parameter outer / inner |
+
+Move (normal / visual / operator-pending):
+
+| Key | Action |
+| --- | --- |
+| `]f` / `[f` | Next / previous function start |
+| `]F` / `[F` | Next / previous function end |
+| `]a` / `[a` | Next / previous parameter |
+
+Incremental selection: `<C-space>` to start/grow, `<C-s>` for scope, `<M-space>`
+to shrink.
+
+### Markdown rendering
+
+render-markdown displays markdown formatted in normal mode and reveals raw
+text on the cursor line / in insert mode. Toggle with `:RenderMarkdown toggle`.
+Heading and code-block icons require a Nerd Font.
 
 ### Copilot
 

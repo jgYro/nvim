@@ -1,0 +1,22 @@
+------------------
+--
+--
+-- render-markdown (MeanderingProgrammer/render-markdown.nvim)
+--
+--
+------------------
+
+-- In-buffer markdown rendering: headings, lists, code blocks, tables and
+-- checkboxes are drawn nicely in normal mode, while the line under the cursor
+-- (and insert mode) reverts to raw text so editing stays natural. Pairs with
+-- markdown-plus, which handles the editing side.
+--
+-- Rendering is powered by the markdown / markdown_inline treesitter parsers
+-- (ensured by plugin_config/treesitter.lua). render-markdown manages
+-- conceallevel per-window itself, so we don't set it globally.
+--
+-- Heading / code-block icons need a Nerd Font in your terminal; code-block
+-- language icons additionally need an icon provider (mini.icons or
+-- nvim-web-devicons), which isn't installed -- text still renders fine
+-- without them.
+require("render-markdown").setup({})

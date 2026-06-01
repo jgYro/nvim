@@ -34,6 +34,18 @@ vim.pack.add({
   { src = "https://github.com/theprimeagen/harpoon", version = "master" },
   -- flash: label-based motion (used only for its jump, bound to `s`).
   { src = "https://github.com/folke/flash.nvim" },
+  -- Treesitter (main branch / the rewrite). Listed before the plugins that
+  -- build on it. main branch needs :TSUpdate after the plugin updates; that
+  -- is wired via a PackChanged autocmd in plugin_config/treesitter.lua.
+  { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
+  -- Textobjects, also on the main branch.
+  { src = "https://github.com/nvim-treesitter/nvim-treesitter-textobjects", version = "main" },
+  -- Classic module experience (highlight/indent/incremental_selection) on top
+  -- of the treesitter main branch.
+  { src = "https://github.com/MeanderingProgrammer/treesitter-modules.nvim" },
+  -- render-markdown: in-buffer rendering of markdown (headings, code blocks,
+  -- tables, checkboxes), powered by treesitter.
+  { src = "https://github.com/MeanderingProgrammer/render-markdown.nvim" },
   -- oh-lucy: colorscheme.
   { src = "https://github.com/Yazeed1s/oh-lucy.nvim" },
 })
@@ -47,5 +59,7 @@ require("plugin_config.which-key")
 require("plugin_config.telescope")
 require("plugin_config.harpoon")
 require("plugin_config.flash")
+require("plugin_config.treesitter")
+require("plugin_config.render-markdown")
 -- Colorscheme last, so it themes everything loaded above.
 require("plugin_config.oh-lucy")
