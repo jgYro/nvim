@@ -43,12 +43,13 @@ require("treesitter-modules").setup({
   incremental_selection = {
     enable = true,
     keymaps = {
-      -- Deliberately off the gr* prefix, which holds Neovim's built-in LSP
-      -- maps (grn rename, gra code action, grr references, ...).
-      init_selection = "<C-space>",
-      node_incremental = "<C-space>",
-      scope_incremental = "<C-s>",
-      node_decremental = "<M-space>",
+      -- Mirror the helix config (.config/helix): A-n expands the selection,
+      -- A-p shrinks it. A-n also starts the selection. No scope key, matching
+      -- helix which has no separate scope motion.
+      init_selection = "<A-n>",
+      node_incremental = "<A-n>",
+      scope_incremental = false,
+      node_decremental = "<A-p>",
     },
   },
 })

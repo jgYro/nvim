@@ -118,8 +118,8 @@ Move (normal / visual / operator-pending):
 | `]F` / `[F` | Next / previous function end |
 | `]a` / `[a` | Next / previous parameter |
 
-Incremental selection: `<C-space>` to start/grow, `<C-s>` for scope, `<M-space>`
-to shrink.
+Incremental selection (matches the helix config): `<A-n>` to start / expand,
+`<A-p>` to shrink.
 
 ### Markdown rendering
 
