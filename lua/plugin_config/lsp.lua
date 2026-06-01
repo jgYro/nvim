@@ -57,6 +57,12 @@ vim.lsp.enable({
   "golangci_lint_ls", -- Go (with gopls)
 })
 
+-- Extra keymaps on top of Neovim's LSP defaults (grn/gra/grr/gri/grt/gO, K,
+-- <C-]>, <C-s>, [d/]d). In markdown buffers markdown-plus rebinds gd to
+-- "follow TOC link" (buffer-local), which correctly wins there.
+vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
+vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, { desc = "Show diagnostic" })
+
 -- Diagnostics (native).
 vim.diagnostic.config({
   virtual_text = true,

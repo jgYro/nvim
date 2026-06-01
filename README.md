@@ -149,6 +149,8 @@ Most LSP keymaps are Neovim defaults (no custom mapping needed):
 | `K` | Hover |
 | `<C-s>` (insert) | Signature help |
 | `[d` / `]d` | Previous / next diagnostic |
+| `gd` | Go to definition *(custom)* |
+| `<leader>d` | Show diagnostic float *(custom)* |
 
 Completion (blink, `default` preset): `<C-y>` accept, `<C-n>`/`<C-p>` select,
 `<C-space>` open menu / docs, `<C-e>` hide. (`<C-k>` is left to Copilot.)
