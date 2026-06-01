@@ -50,6 +50,7 @@ lua/
 | [nvim-treesitter-textobjects](https://github.com/nvim-treesitter/nvim-treesitter-textobjects) (main) | Treesitter-based textobjects (select / move) |
 | [treesitter-modules.nvim](https://github.com/MeanderingProgrammer/treesitter-modules.nvim) | Highlight / indent / incremental-selection modules on the treesitter main branch |
 | [render-markdown.nvim](https://github.com/MeanderingProgrammer/render-markdown.nvim) | In-buffer markdown rendering (raw while editing, formatted in normal mode) |
+| [blink.cmp](https://github.com/Saghen/blink.cmp) | Completion engine (LSP / path / snippets / buffer, Rust fuzzy matcher) |
 | [oh-lucy.nvim](https://github.com/Yazeed1s/oh-lucy.nvim) | Colorscheme (`oh-lucy` variant) |
 
 ## Keybindings
@@ -126,6 +127,36 @@ Incremental selection (matches the helix config): `<A-n>` to start / expand,
 render-markdown displays markdown formatted in normal mode and reveals raw
 text on the cursor line / in insert mode. Toggle with `:RenderMarkdown toggle`.
 Heading and code-block icons require a Nerd Font.
+
+### LSP / completion / diagnostics
+
+LSP uses Neovim's **native** API: each server is a hand-written config in
+[`lsp/`](lsp/) (`lsp/<name>.lua`), turned on with `vim.lsp.enable()` in
+`lua/plugin_config/lsp.lua`. Completion is **blink.cmp** (its capabilities are
+advertised to every server); diagnostics use `vim.diagnostic`.
+
+Most LSP keymaps are Neovim defaults (no custom mapping needed):
+
+| Key | Action |
+| --- | --- |
+| `grn` | Rename |
+| `gra` | Code action |
+| `grr` | References |
+| `gri` | Implementation |
+| `grt` | Type definition |
+| `gO` | Document symbols |
+| `K` | Hover |
+| `<C-s>` (insert) | Signature help |
+| `[d` / `]d` | Previous / next diagnostic |
+
+Completion (blink, `default` preset): `<C-y>` accept, `<C-n>`/`<C-p>` select,
+`<C-space>` open menu / docs, `<C-e>` hide. (`<C-k>` is left to Copilot.)
+
+**Enabled servers** (binary must be installed — see the note atop each
+`lsp/<name>.lua`): `lua_ls`, `rust_analyzer`, `dartls`, `pyright`, `gopls`,
+`ts_ls`, `html`, `intelephense`, `tailwindcss`. To add one: drop a
+`lsp/<name>.lua` returning `{ cmd, filetypes, root_markers }` and add its name
+to the `vim.lsp.enable{}` list.
 
 ### Copilot
 
