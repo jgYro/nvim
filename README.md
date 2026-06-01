@@ -45,6 +45,7 @@ lua/
 | [which-key.nvim](https://github.com/folke/which-key.nvim) | Popup of available keybinds after a prefix |
 | [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) + [plenary.nvim](https://github.com/nvim-lua/plenary.nvim) | Fuzzy finder |
 | [harpoon](https://github.com/ThePrimeagen/harpoon) (v1) | Quick file marks and jumps |
+| [flash.nvim](https://github.com/folke/flash.nvim) | Label-based motion (avy-style jump on `s`, plus `f`/`t` and search labels) |
 
 ## Keybindings
 
@@ -85,6 +86,14 @@ Leader is `<Space>`.
 
 > `<C-;>` only works in GUI clients or terminals that support the kitty
 > keyboard protocol; most plain terminals can't send it.
+
+### Flash (motion)
+
+| Key | Mode | Action |
+| --- | --- | --- |
+| `s` | n, x, o | Avy-style jump: type chars, press a label to jump |
+| `f` / `F` / `t` / `T` | n, x, o | Char motions, enhanced with jump labels |
+| `/` / `?` | n | Search, enhanced with jump labels |
 
 ### Copilot
 

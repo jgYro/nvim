@@ -32,6 +32,8 @@ vim.pack.add({
   -- master branch by preference (harpoon2 lives on a separate branch).
   -- Also depends on plenary.nvim, already listed above.
   { src = "https://github.com/theprimeagen/harpoon", version = "master" },
+  -- flash: label-based motion (used only for its jump, bound to `s`).
+  { src = "https://github.com/folke/flash.nvim" },
 })
 
 --
@@ -42,3 +44,4 @@ require("plugin_config.markdown-plus")
 require("plugin_config.which-key")
 require("plugin_config.telescope")
 require("plugin_config.harpoon")
+require("plugin_config.flash")
