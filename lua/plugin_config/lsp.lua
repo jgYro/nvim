@@ -51,6 +51,10 @@ vim.lsp.enable({
   "html",
   "intelephense",
   "tailwindcss",
+  -- Linters (also LSP servers), running alongside the above:
+  "eslint", -- JS/TS
+  "ruff", -- Python (with pyright)
+  "golangci_lint_ls", -- Go (with gopls)
 })
 
 -- Diagnostics (native).

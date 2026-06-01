@@ -51,6 +51,7 @@ lua/
 | [treesitter-modules.nvim](https://github.com/MeanderingProgrammer/treesitter-modules.nvim) | Highlight / indent / incremental-selection modules on the treesitter main branch |
 | [render-markdown.nvim](https://github.com/MeanderingProgrammer/render-markdown.nvim) | In-buffer markdown rendering (raw while editing, formatted in normal mode) |
 | [blink.cmp](https://github.com/Saghen/blink.cmp) | Completion engine (LSP / path / snippets / buffer, Rust fuzzy matcher) |
+| [conform.nvim](https://github.com/stevearc/conform.nvim) | Format-on-save (stylua / prettier / ruff; LSP fallback) |
 | [oh-lucy.nvim](https://github.com/Yazeed1s/oh-lucy.nvim) | Colorscheme (`oh-lucy` variant) |
 
 ## Keybindings
@@ -154,9 +155,17 @@ Completion (blink, `default` preset): `<C-y>` accept, `<C-n>`/`<C-p>` select,
 
 **Enabled servers** (binary must be installed — see the note atop each
 `lsp/<name>.lua`): `lua_ls`, `rust_analyzer`, `dartls`, `pyright`, `gopls`,
-`ts_ls`, `html`, `intelephense`, `tailwindcss`. To add one: drop a
-`lsp/<name>.lua` returning `{ cmd, filetypes, root_markers }` and add its name
-to the `vim.lsp.enable{}` list.
+`ts_ls`, `html`, `intelephense`, `tailwindcss`, plus linters `eslint` (JS/TS),
+`ruff` (Python), `golangci_lint_ls` (Go). Each `cmd` is pinned to an absolute
+path so a GUI-launched Neovim still finds it; `options.lua` also prepends
+`/opt/homebrew/bin` to `PATH` so node-based servers run on the latest node. To
+add a server: drop a `lsp/<name>.lua` returning `{ cmd, filetypes,
+root_markers }` and add its name to the `vim.lsp.enable{}` list.
+
+**Linting & formatting.** Diagnostics come from the language servers (incl. the
+three linters above) via `vim.diagnostic`. Formatting is **conform.nvim** on
+save: `stylua` (Lua), `prettier` (JS/TS/HTML/CSS/JSON/YAML/Markdown),
+`ruff` (Python); other filetypes fall back to LSP formatting.
 
 ### Copilot
 

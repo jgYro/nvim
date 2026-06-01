@@ -49,6 +49,8 @@ vim.pack.add({
   -- blink.cmp: completion engine. Pinned to the v1.x tag so the prebuilt Rust
   -- fuzzy-matcher binary is downloaded (no cargo build needed).
   { src = "https://github.com/Saghen/blink.cmp", version = vim.version.range("1") },
+  -- conform: format-on-save via external formatters (stylua/prettier/ruff).
+  { src = "https://github.com/stevearc/conform.nvim" },
   -- oh-lucy: colorscheme.
   { src = "https://github.com/Yazeed1s/oh-lucy.nvim" },
 })
@@ -65,5 +67,6 @@ require("plugin_config.flash")
 require("plugin_config.treesitter")
 require("plugin_config.render-markdown")
 require("plugin_config.lsp")
+require("plugin_config.conform")
 -- Colorscheme last, so it themes everything loaded above.
 require("plugin_config.oh-lucy")
