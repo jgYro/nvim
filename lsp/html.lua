@@ -1,7 +1,7 @@
 -- HTML (vscode-html-language-server). Binary:
 -- `npm i -g vscode-langservers-extracted`.
 return {
-  cmd = { "vscode-html-language-server", "--stdio" },
+  cmd = { "/opt/homebrew/bin/vscode-html-language-server", "--stdio" },
   filetypes = { "html", "templ" },
   root_markers = { "package.json", ".git" },
   init_options = {

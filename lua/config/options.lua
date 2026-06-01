@@ -6,6 +6,13 @@
 --
 ------------------
 
+-- Prefer Homebrew's toolchain for processes Neovim spawns. Node-based LSP
+-- servers use `#!/usr/bin/env node`, which would otherwise resolve to the
+-- nvm-active node (v20); prepending /opt/homebrew/bin keeps `node` at the
+-- latest (v25). Absolute-pinned servers are unaffected; :terminal re-sources
+-- your shell profile, so interactive nvm usage is untouched.
+vim.env.PATH = "/opt/homebrew/bin:" .. (vim.env.PATH or "")
+
 -- Leaders. Must be set before plugins/keymaps load, which is why they
 -- live here (options is the first module required in init.lua). Both are
 -- set to <Space> following the common kickstart.nvim convention:

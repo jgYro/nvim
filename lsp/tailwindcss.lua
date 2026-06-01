@@ -1,7 +1,7 @@
 -- Tailwind CSS (tailwindcss-language-server). Binary:
 -- `npm i -g @tailwindcss/language-server`.
 return {
-  cmd = { "tailwindcss-language-server", "--stdio" },
+  cmd = { "/opt/homebrew/bin/tailwindcss-language-server", "--stdio" },
   filetypes = {
     "html",
     "css",

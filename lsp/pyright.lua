@@ -1,6 +1,6 @@
 -- Python (pyright). Binary: `npm i -g pyright` or `brew install pyright`.
 return {
-  cmd = { "pyright-langserver", "--stdio" },
+  cmd = { "/opt/homebrew/bin/pyright-langserver", "--stdio" },
   filetypes = { "python" },
   root_markers = {
     "pyproject.toml",

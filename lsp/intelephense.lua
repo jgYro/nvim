@@ -1,6 +1,6 @@
 -- PHP (intelephense). Binary: `npm i -g intelephense`.
 return {
-  cmd = { "intelephense", "--stdio" },
+  cmd = { "/opt/homebrew/bin/intelephense", "--stdio" },
   filetypes = { "php" },
   root_markers = { "composer.json", ".git" },
 }
