@@ -79,9 +79,40 @@ vim.api.nvim_create_autocmd("WinEnter", {
 -- <C-]>, <C-s>, [d/]d). In markdown buffers markdown-plus rebinds gd to
 -- "follow TOC link" (buffer-local), which correctly wins there.
 vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
-vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, { desc = "Show diagnostic" })
--- <leader>k = hover docs (mirrors helix's <space>k).
-vim.keymap.set("n", "<leader>k", vim.lsp.buf.hover, { desc = "Hover documentation" })
+
+-- Popups you jump INTO (to scroll/read), with `q` to close. <C-o> also works
+-- to leave (winfixbuf is cleared on floats above). `q` is mapped buffer-local
+-- on the focused popup only, so it never affects other floats (Telescope etc.).
+local function focus_popup(win)
+  if not (win and win > 0 and vim.api.nvim_win_is_valid(win)) then
+    return
+  end
+  vim.api.nvim_set_current_win(win)
+  vim.wo[win].winfixbuf = false
+  vim.keymap.set("n", "q", "<cmd>close<cr>", {
+    buffer = vim.api.nvim_win_get_buf(win),
+    nowait = true,
+    desc = "Close popup",
+  })
+end
+
+-- K / <leader>k: hover, then jump into the popup (mirrors helix <space>k).
+-- hover is async, so focus on a short delay; pressing again also focuses
+-- (Neovim's built-in behaviour) if the server was slow.
+local function hover_focus()
+  vim.lsp.buf.hover()
+  vim.defer_fn(function()
+    focus_popup(vim.b[vim.api.nvim_get_current_buf()].lsp_floating_preview)
+  end, 150)
+end
+vim.keymap.set("n", "K", hover_focus, { desc = "Hover (enter popup)" })
+vim.keymap.set("n", "<leader>k", hover_focus, { desc = "Hover (enter popup)" })
+
+-- <leader>d: open the diagnostic float and jump into it (synchronous).
+vim.keymap.set("n", "<leader>d", function()
+  local fbuf, fwin = vim.diagnostic.open_float()
+  focus_popup(fwin or (fbuf and vim.fn.bufwinid(fbuf)) or nil)
+end, { desc = "Diagnostic (enter popup)" })
 
 -- Step through diagnostics, matching the Lq/Hq quickfix idiom. on_jump opens
 -- the float after moving (the old `float = true` option is deprecated).

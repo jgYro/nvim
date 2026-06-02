@@ -146,12 +146,12 @@ Most LSP keymaps are Neovim defaults (no custom mapping needed):
 | `gri` | Implementation |
 | `grt` | Type definition |
 | `gO` | Document symbols |
-| `K` | Hover |
+| `K` / `<leader>k` | Hover docs — jumps **into** the popup *(custom)* |
+| `<leader>d` | Diagnostic float — jumps **into** the popup *(custom)* |
+| `q` / `<C-o>` | Close / leave a focused popup |
 | `<C-s>` (insert) | Signature help |
 | `[d` / `]d` | Previous / next diagnostic |
 | `gd` | Go to definition *(custom)* |
-| `<leader>k` | Hover documentation *(custom)* |
-| `<leader>d` | Show diagnostic float *(custom)* |
 | `Ld` / `Hd` | Next / previous diagnostic *(custom)* |
 
 Completion (blink, `default` preset): `<CR>` accepts a selected item (nothing
