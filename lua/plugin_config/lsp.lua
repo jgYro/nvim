@@ -62,6 +62,19 @@ vim.lsp.enable({
   "golangci_lint_ls", -- Go (with gopls)
 })
 
+-- Neovim pins LSP hover / signature / doc floats with winfixbuf=true, so
+-- <C-o> (jumplist) inside a focused popup errors with E1513. Clear winfixbuf
+-- on any floating window we enter so navigation works there.
+vim.api.nvim_create_autocmd("WinEnter", {
+  group = vim.api.nvim_create_augroup("clear_float_winfixbuf", { clear = true }),
+  callback = function()
+    local win = vim.api.nvim_get_current_win()
+    if vim.api.nvim_win_get_config(win).relative ~= "" then
+      vim.wo[win].winfixbuf = false
+    end
+  end,
+})
+
 -- Extra keymaps on top of Neovim's LSP defaults (grn/gra/grr/gri/grt/gO, K,
 -- <C-]>, <C-s>, [d/]d). In markdown buffers markdown-plus rebinds gd to
 -- "follow TOC link" (buffer-local), which correctly wins there.
