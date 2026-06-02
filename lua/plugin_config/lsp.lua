@@ -70,12 +70,21 @@ vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, { desc = "Show diagn
 -- <leader>k = hover docs (mirrors helix's <space>k).
 vim.keymap.set("n", "<leader>k", vim.lsp.buf.hover, { desc = "Hover documentation" })
 
--- Step through diagnostics, matching the Lq/Hq quickfix idiom.
+-- Step through diagnostics, matching the Lq/Hq quickfix idiom. on_jump opens
+-- the float after moving (the old `float = true` option is deprecated).
+local function diag_jump(count)
+  vim.diagnostic.jump({
+    count = count,
+    on_jump = function(_, bufnr)
+      vim.diagnostic.open_float({ bufnr = bufnr })
+    end,
+  })
+end
 vim.keymap.set("n", "Ld", function()
-  vim.diagnostic.jump({ count = 1, float = true })
+  diag_jump(1)
 end, { desc = "Next diagnostic" })
 vim.keymap.set("n", "Hd", function()
-  vim.diagnostic.jump({ count = -1, float = true })
+  diag_jump(-1)
 end, { desc = "Prev diagnostic" })
 
 -- Diagnostics (native).
@@ -85,5 +94,8 @@ vim.diagnostic.config({
   underline = true,
   update_in_insert = false,
   severity_sort = true,
-  float = { border = "rounded", source = true },
+  -- "if_many" only prefixes the source when a line has diagnostics from more
+  -- than one source -- avoids the doubled "errcheck: errcheck:" you get when a
+  -- linter (golangci-lint) already bakes its name into the message.
+  float = { border = "rounded", source = "if_many" },
 })
