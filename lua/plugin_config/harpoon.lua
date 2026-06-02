@@ -47,7 +47,7 @@ end
 
 -- Add the current file to the harpoon list, and toggle the picker menu.
 vim.keymap.set("n", "<leader>a", mark.add_file, { desc = "Harpoon add file" })
-vim.keymap.set("n", "<leader>e", ui.toggle_quick_menu, { desc = "Harpoon menu" })
+vim.keymap.set("n", "C-e", ui.toggle_quick_menu, { desc = "Harpoon menu" })
 
 -- Jump straight to harpoon slots 1-4.
 -- NOTE: <C-;> usually only works in GUI clients (Neovide); most terminals
