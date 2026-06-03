@@ -35,6 +35,8 @@ vim.keymap.set("n", "<leader>gs", builtin.git_status, { desc = "Git status" })
 vim.keymap.set("n", "<leader>gl", builtin.git_bcommits, { desc = "Git buffer commits" })
 vim.keymap.set("n", "<leader>gL", builtin.git_bcommits_range, { desc = "Git buffer commits (range)" })
 vim.keymap.set("n", "<leader>km", builtin.keymaps, { desc = "Keymaps" })
+vim.keymap.set("n", "<leader>lr", builtin.lsp_references, { desc = "LSP references" })
+vim.keymap.set("n", "<leader>sp", builtin.spell_suggest, { desc = "Spelling suggestions" })
 
 -- Group label for the <Space>f prefix in the which-key popup. pcall keeps
 -- this file independent of whether which-key is installed.

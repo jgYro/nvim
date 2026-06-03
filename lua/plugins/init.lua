@@ -51,6 +51,8 @@ vim.pack.add({
   { src = "https://github.com/Saghen/blink.cmp", version = vim.version.range("1") },
   -- conform: format-on-save via external formatters (stylua/prettier/ruff).
   { src = "https://github.com/stevearc/conform.nvim" },
+  -- watcher: review external file changes (floating diff -> accept/reject).
+  { src = "https://github.com/jgYro/watcher.nvim" },
   -- oh-lucy: colorscheme.
   { src = "https://github.com/Yazeed1s/oh-lucy.nvim" },
 })
@@ -68,5 +70,6 @@ require("plugin_config.treesitter")
 require("plugin_config.render-markdown")
 require("plugin_config.lsp")
 require("plugin_config.conform")
+require("plugin_config.watcher")
 -- Colorscheme last, so it themes everything loaded above.
 require("plugin_config.oh-lucy")

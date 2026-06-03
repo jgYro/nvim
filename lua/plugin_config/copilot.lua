@@ -50,7 +50,7 @@ require("copilot").setup({
     enabled = true,
     keymap = {
       -- <leader>l (not <leader>p) so it never contends with clipboard paste.
-      accept_and_goto = "<leader>l",
+      accept_and_goto = "<C-p>",
       accept = false,
       dismiss = "<Esc>",
     },

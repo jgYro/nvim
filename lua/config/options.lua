@@ -42,6 +42,8 @@ vim.opt.smartindent = true
 -- Long lines run off-screen instead of wrapping.
 vim.opt.wrap = false
 
+-- ('autoread' is managed by watcher.nvim, which handles external changes.)
+
 -- No swap/backup files. Persist undo history to disk instead, so undo
 -- survives across sessions (paired with an undo-tree plugin).
 vim.opt.swapfile = false
