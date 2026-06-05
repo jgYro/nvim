@@ -65,7 +65,7 @@
       "src": "https://github.com/MeanderingProgrammer/treesitter-modules.nvim"
     },
     "watcher.nvim": {
-      "rev": "80e72b92684bc25d945d52fed443a391cc584d10",
+      "rev": "54364300dd006e181670f312bfdc41248159467e",
       "src": "https://github.com/jgYro/watcher.nvim"
     },
     "which-key.nvim": {

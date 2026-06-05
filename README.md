@@ -216,5 +216,9 @@ key to act:
 Detection is event-driven (focus / idle / buffer-enter) plus a 1s background
 poll, so the prompt appears on its own even while you sit idle.
 
+It also watches the whole project (`watch_cwd`): external changes and new
+files that aren't open in a buffer get an open / diff / dismiss prompt,
+respecting `.gitignore` (plus `node_modules`, `.DS_Store`, `*.log`).
+
 Provided by [watcher.nvim](https://github.com/jgYro/watcher.nvim) (extracted
 from this config); configured in `lua/plugin_config/watcher.lua`.
