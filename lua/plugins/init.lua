@@ -53,6 +53,13 @@ vim.pack.add({
   { src = "https://github.com/stevearc/conform.nvim" },
   -- watcher: review external file changes (floating diff -> accept/reject).
   { src = "https://github.com/jgYro/watcher.nvim" },
+  -- gitsigns: git change signs in the gutter (+ hunk navigation/staging).
+  { src = "https://github.com/lewis6991/gitsigns.nvim" },
+  -- nvim-tree: file explorer sidebar.
+  { src = "https://github.com/nvim-tree/nvim-tree.lua" },
+  -- nvim-tree-preview: floating, scrollable file preview from the tree.
+  -- Depends on plenary (listed above).
+  { src = "https://github.com/b0o/nvim-tree-preview.lua" },
   -- oh-lucy: colorscheme.
   { src = "https://github.com/Yazeed1s/oh-lucy.nvim" },
 })
@@ -70,6 +77,9 @@ require("plugin_config.treesitter")
 require("plugin_config.render-markdown")
 require("plugin_config.lsp")
 require("plugin_config.conform")
-require("plugin_config.watcher")
+-- watcher disabled for now; re-enable to restore external-change review.
+-- require("plugin_config.watcher")
+require("plugin_config.gitsigns")
+require("plugin_config.nvim-tree")
 -- Colorscheme last, so it themes everything loaded above.
 require("plugin_config.oh-lucy")

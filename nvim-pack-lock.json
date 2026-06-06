@@ -21,6 +21,10 @@
       "rev": "fcea7ff883235d9024dc41e638f164a450c14ca2",
       "src": "https://github.com/folke/flash.nvim"
     },
+    "gitsigns.nvim": {
+      "rev": "25050e4ed39e628282831d4cbecb1850454ce915",
+      "src": "https://github.com/lewis6991/gitsigns.nvim"
+    },
     "harpoon": {
       "rev": "1bc17e3e42ea3c46b33c0bbad6a880792692a1b3",
       "src": "https://github.com/theprimeagen/harpoon",
@@ -33,6 +37,14 @@
     "nvim-lspconfig": {
       "rev": "c4f67bf85b01a57e3c130352c0a0e453ab8cd5b9",
       "src": "https://github.com/neovim/nvim-lspconfig"
+    },
+    "nvim-tree-preview.lua": {
+      "rev": "3f188af9a60aaf83fc732077478d2d90dbccd55f",
+      "src": "https://github.com/b0o/nvim-tree-preview.lua"
+    },
+    "nvim-tree.lua": {
+      "rev": "07f541fcaa4a5ae019598240362449ab7e9812b3",
+      "src": "https://github.com/nvim-tree/nvim-tree.lua"
     },
     "nvim-treesitter": {
       "rev": "4fc09bee78e91bf4ba471cdab4bf9dfa37fde51c",

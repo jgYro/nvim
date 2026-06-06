@@ -30,6 +30,10 @@ vim.opt.termguicolors = true
 vim.opt.nu = true
 vim.opt.relativenumber = true
 
+-- Always show the sign column so the git gutter (gitsigns) doesn't shift
+-- text left/right as signs appear and disappear.
+vim.opt.signcolumn = "yes"
+
 -- Indentation: 2-space soft tabs everywhere.
 vim.opt.tabstop = 2
 vim.opt.softtabstop = 2
