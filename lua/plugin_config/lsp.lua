@@ -96,14 +96,70 @@ local function focus_popup(win)
   })
 end
 
+-- While reading a hover popup, grey out the code behind it so the docs stand
+-- out. We lay a single buffer-wide extmark in a high priority (above treesitter)
+-- that recolours every token to a muted grey, and clear it when the float
+-- closes. The dim highlight is refreshed on :colorscheme.
+local dim_ns = vim.api.nvim_create_namespace("lsp_hover_dim")
+local dimmed_buf = nil
+
+local function set_hover_dim_hl()
+  vim.api.nvim_set_hl(0, "LspHoverDim", { fg = "#3b3e48" })
+end
+set_hover_dim_hl()
+vim.api.nvim_create_autocmd("ColorScheme", {
+  group = vim.api.nvim_create_augroup("lsp_hover_dim_hl", { clear = true }),
+  callback = set_hover_dim_hl,
+})
+
+local function undim_hover()
+  if dimmed_buf and vim.api.nvim_buf_is_valid(dimmed_buf) then
+    vim.api.nvim_buf_clear_namespace(dimmed_buf, dim_ns, 0, -1)
+  end
+  dimmed_buf = nil
+end
+
+local function dim_hover(buf)
+  undim_hover()
+  local last = vim.api.nvim_buf_line_count(buf) - 1
+  local last_line = vim.api.nvim_buf_get_lines(buf, last, last + 1, false)[1] or ""
+  vim.api.nvim_buf_set_extmark(buf, dim_ns, 0, 0, {
+    end_row = last,
+    end_col = #last_line,
+    hl_group = "LspHoverDim",
+    hl_eol = true,
+    priority = 10000,
+  })
+  dimmed_buf = buf
+end
+
 -- K / <leader>k: hover, then jump into the popup (mirrors helix <space>k).
--- hover is async, so focus on a short delay; pressing again also focuses
--- (Neovim's built-in behaviour) if the server was slow.
+-- hover is async, so instead of a fixed delay we poll briefly and focus the
+-- instant the float exists -- snappy for fast servers, still works for slow
+-- ones. The source buffer is dimmed while the popup is up, restored on close.
+local function focus_hover_when_ready(src_buf, tries)
+  local win = vim.b[src_buf].lsp_floating_preview
+  if win and vim.api.nvim_win_is_valid(win) then
+    dim_hover(src_buf)
+    focus_popup(win)
+    -- Undim as soon as the hover float closes (q, cursor move, <C-o> away).
+    vim.api.nvim_create_autocmd("WinClosed", {
+      pattern = tostring(win),
+      once = true,
+      callback = undim_hover,
+    })
+  elseif tries > 0 then
+    vim.defer_fn(function()
+      focus_hover_when_ready(src_buf, tries - 1)
+    end, 16)
+  end
+end
+
 local function hover_focus()
+  local src_buf = vim.api.nvim_get_current_buf()
   vim.lsp.buf.hover()
-  vim.defer_fn(function()
-    focus_popup(vim.b[vim.api.nvim_get_current_buf()].lsp_floating_preview)
-  end, 150)
+  -- ~50 * 16ms ≈ 0.8s ceiling; focuses on the first tick the float is ready.
+  focus_hover_when_ready(src_buf, 50)
 end
 vim.keymap.set("n", "K", hover_focus, { desc = "Hover (enter popup)" })
 vim.keymap.set("n", "<leader>k", hover_focus, { desc = "Hover (enter popup)" })
@@ -130,6 +186,36 @@ end, { desc = "Next diagnostic" })
 vim.keymap.set("n", "Hd", function()
   diag_jump(-1)
 end, { desc = "Prev diagnostic" })
+
+-- <leader>rl: restart LSP and refresh every buffer from disk. Stops all active
+-- clients (they re-attach when buffers reload via the vim.lsp.enable FileType
+-- autocmds), pulls external changes, and reloads each unmodified, file-backed
+-- buffer so syntax/LSP re-initialise. Modified buffers are skipped so unsaved
+-- edits are never clobbered.
+local function restart_lsp()
+  for _, client in ipairs(vim.lsp.get_clients()) do
+    vim.lsp.stop_client(client.id, true)
+  end
+
+  -- Give clients a moment to exit before reloading + re-attaching.
+  vim.defer_fn(function()
+    vim.cmd("checktime") -- pull in external changes (like a manual :e)
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+      if
+        vim.api.nvim_buf_is_loaded(buf)
+        and vim.bo[buf].buftype == ""
+        and not vim.bo[buf].modified
+        and vim.api.nvim_buf_get_name(buf) ~= ""
+      then
+        vim.api.nvim_buf_call(buf, function()
+          vim.cmd("edit")
+        end)
+      end
+    end
+    vim.notify("LSP restarted; buffers refreshed", vim.log.levels.INFO)
+  end, 200)
+end
+vim.keymap.set("n", "<leader>rl", restart_lsp, { desc = "Restart LSP + refresh buffers" })
 
 -- Diagnostics (native).
 vim.diagnostic.config({

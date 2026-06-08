@@ -20,3 +20,26 @@
 -- name "oh-lucy-evening". Requires termguicolors (set in config/options.lua).
 
 vim.cmd.colorscheme("oh-lucy")
+
+-- oh-lucy makes float / popup-menu backgrounds only a hair darker than the
+-- editor background (#14161d vs #1b1d26), so a popup anchored mid-line (e.g. an
+-- LSP hover beginning right after `report.st`) blends into the code under it.
+-- Darken those backgrounds noticeably so floats read as a distinct panel. We
+-- merge over the existing highlight (preserving fg) and re-apply on every
+-- :colorscheme so it survives reloads.
+local FLOAT_BG = "#0d0f15" -- clearly darker than Normal's #1b1d26
+
+local function darken_floats()
+  for _, group in ipairs({ "NormalFloat", "FloatBorder", "Pmenu" }) do
+    local hl = vim.api.nvim_get_hl(0, { name = group, link = false })
+    hl.bg = FLOAT_BG
+    vim.api.nvim_set_hl(0, group, hl)
+  end
+end
+
+vim.api.nvim_create_autocmd("ColorScheme", {
+  group = vim.api.nvim_create_augroup("oh_lucy_darker_floats", { clear = true }),
+  pattern = "oh-lucy*",
+  callback = darken_floats,
+})
+darken_floats() -- colorscheme is already set above, so apply now too

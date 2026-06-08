@@ -60,6 +60,8 @@ vim.pack.add({
   -- nvim-tree-preview: floating, scrollable file preview from the tree.
   -- Depends on plenary (listed above).
   { src = "https://github.com/b0o/nvim-tree-preview.lua" },
+  -- twilight: dim everything outside the current code scope ("focus mode").
+  { src = "https://github.com/folke/twilight.nvim" },
   -- oh-lucy: colorscheme.
   { src = "https://github.com/Yazeed1s/oh-lucy.nvim" },
 })
@@ -81,5 +83,6 @@ require("plugin_config.conform")
 -- require("plugin_config.watcher")
 require("plugin_config.gitsigns")
 require("plugin_config.nvim-tree")
+require("plugin_config.twilight")
 -- Colorscheme last, so it themes everything loaded above.
 require("plugin_config.oh-lucy")
