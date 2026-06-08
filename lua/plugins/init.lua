@@ -23,6 +23,9 @@ vim.pack.add({
   { src = "https://github.com/YousefHadder/markdown-plus.nvim" },
   -- which-key: popup of available keybinds following a prefix
   { src = "https://github.com/folke/which-key.nvim" },
+  -- dressing: floating UI for vim.ui.input / vim.ui.select (used by the
+  -- llm_yank prompt, code actions, rename, etc.).
+  { src = "https://github.com/stevearc/dressing.nvim" },
   -- plenary: Lua utility library. Required dependency of telescope; listed
   -- first so it is on the runtimepath when telescope sets up.
   { src = "https://github.com/nvim-lua/plenary.nvim" },
@@ -62,6 +65,9 @@ vim.pack.add({
   { src = "https://github.com/b0o/nvim-tree-preview.lua" },
   -- twilight: dim everything outside the current code scope ("focus mode").
   { src = "https://github.com/folke/twilight.nvim" },
+  -- yank2think: collect code selections into an LLM-ready markdown buffer.
+  -- (Extracted from this config into its own plugin.)
+  { src = "https://github.com/jgYro/yank2think.nvim" },
   -- oh-lucy: colorscheme.
   { src = "https://github.com/Yazeed1s/oh-lucy.nvim" },
 })
@@ -72,6 +78,7 @@ vim.pack.add({
 require("plugin_config.copilot")
 require("plugin_config.markdown-plus")
 require("plugin_config.which-key")
+require("plugin_config.dressing")
 require("plugin_config.telescope")
 require("plugin_config.harpoon")
 require("plugin_config.flash")
@@ -84,5 +91,6 @@ require("plugin_config.conform")
 require("plugin_config.gitsigns")
 require("plugin_config.nvim-tree")
 require("plugin_config.twilight")
+require("plugin_config.yank2think")
 -- Colorscheme last, so it themes everything loaded above.
 require("plugin_config.oh-lucy")
