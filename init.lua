@@ -16,6 +16,8 @@ require("keybinds.movement")
 require("keybinds.clipboard")
 -- Quickfix Keybinds
 require("keybinds.quickfix")
+-- Scroll / Recenter Keybinds
+require("keybinds.scroll")
 -- Terminal Keybinds
 require("keybinds.terminal")
 -- Word Wrap Keybinds

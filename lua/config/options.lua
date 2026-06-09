@@ -63,9 +63,7 @@ vim.opt.incsearch = true
 vim.o.ignorecase = true
 vim.o.smartcase = true
 
--- Keep 8 lines of context above/below the cursor, and treat "@-@" as part
--- of a filename (so gf works on more paths).
-vim.opt.scrolloff = 8
+-- Treat "@-@" as part of a filename (so gf works on more paths).
 vim.opt.isfname:append("@-@")
 
 -- Faster CursorHold / swap-write events (snappier LSP, plugins).
