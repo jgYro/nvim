@@ -13,7 +13,18 @@ vim.g.loaded_netrwPlugin = 1
 
 -- Floating, scrollable file preview (b0o/nvim-tree-preview.lua). Defaults are
 -- fine; this registers the in-preview keymaps (Tab toggles focus, etc.).
-require("nvim-tree-preview").setup({})
+require("nvim-tree-preview").setup({
+  -- Merge over the plugin defaults: while focused IN the preview float, open the
+  -- file in a split. C-- horizontal (- looks horizontal), C-| vertical.
+  keymaps = {
+    ["<C-->"] = { open = "horizontal" },
+    -- Vertical, every way Ctrl+| can arrive: <C-bar> (kitty), <C-S-Bslash>
+    -- (tmux csi-u), <C-Bslash> (iTerm2 legacy Ctrl+| = ^\).
+    ["<C-bar>"] = { open = "vertical" },
+    ["<C-S-Bslash>"] = { open = "vertical" },
+    ["<C-Bslash>"] = { open = "vertical" },
+  },
+})
 
 -- Keymaps applied to the tree buffer. Because we pass a custom on_attach, we
 -- must call default_on_attach first or we'd lose all of nvim-tree's defaults.
@@ -34,6 +45,36 @@ local function on_attach(bufnr)
   -- Scroll the preview float without leaving the tree.
   vim.keymap.set("n", "<C-d>", function() preview.scroll(4) end, opts("Scroll preview down"))
   vim.keymap.set("n", "<C-u>", function() preview.scroll(-4) end, opts("Scroll preview up"))
+
+  -- Horizontal scroll: the preview API only scrolls vertically, so we nudge the
+  -- preview window's leftcol directly (works because the preview is nowrap).
+  -- Reaches into the plugin's manager for the window handle; guarded so it no-ops
+  -- if the preview isn't open or the internals change.
+  local function hscroll(cols)
+    local ok, mgr = pcall(require, "nvim-tree-preview.manager")
+    if not (ok and mgr.instance and mgr.instance:is_valid()) then
+      return
+    end
+    local win = mgr.instance.preview_win
+    if not (win and vim.api.nvim_win_is_valid(win)) then
+      return
+    end
+    vim.api.nvim_win_call(win, function()
+      local view = vim.fn.winsaveview()
+      view.leftcol = math.max(0, (view.leftcol or 0) + cols)
+      vim.fn.winrestview(view)
+    end)
+  end
+  vim.keymap.set("n", "<C-l>", function() hscroll(8) end, opts("Scroll preview right"))
+  vim.keymap.set("n", "<C-h>", function() hscroll(-8) end, opts("Scroll preview left"))
+
+  -- Open the node under the cursor in a split: C-- horizontal, C-| vertical.
+  -- Vertical covers every way Ctrl+| can arrive: <C-bar> (kitty), <C-S-Bslash>
+  -- (tmux csi-u), <C-Bslash> (iTerm2 legacy: Ctrl+| sends the same ^\ as Ctrl+\).
+  vim.keymap.set("n", "<C-->", api.node.open.horizontal, opts("Open: horizontal split"))
+  vim.keymap.set("n", "<C-bar>", api.node.open.vertical, opts("Open: vertical split"))
+  vim.keymap.set("n", "<C-S-Bslash>", api.node.open.vertical, opts("Open: vertical split"))
+  vim.keymap.set("n", "<C-Bslash>", api.node.open.vertical, opts("Open: vertical split"))
 
   -- Tab: preview a file (and toggle focus into it); on a directory, expand it.
   vim.keymap.set("n", "<Tab>", function()

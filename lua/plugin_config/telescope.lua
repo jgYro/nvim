@@ -10,11 +10,35 @@
 -- when available (both are installed via Homebrew). plenary.nvim must be on
 -- the runtimepath first; it is listed before telescope in plugins/init.lua.
 
+local actions = require("telescope.actions")
+
+-- Shared picker mappings, matching the nvim-tree preview:
+--   C-d/C-u  scroll preview down/up
+--   C-l/C-h  scroll preview right/left
+--   C--      open selection in a horizontal split (- looks horizontal)
+--   C-|      open selection in a vertical split   (| looks vertical)
+-- Applied in both insert and normal mode.
+local picker_maps = {
+  ["<C-d>"] = actions.preview_scrolling_down,
+  ["<C-u>"] = actions.preview_scrolling_up,
+  ["<C-l>"] = actions.preview_scrolling_right,
+  ["<C-h>"] = actions.preview_scrolling_left,
+  ["<C-->"] = actions.select_horizontal,
+  -- Vertical split, bound to every way Ctrl+| can arrive: <C-bar> (kitty
+  -- protocol), <C-S-Bslash> (tmux csi-u: base key \ + shift), and <C-Bslash>
+  -- (iTerm2 legacy, where Ctrl+| collapses to Ctrl+\ = ^\).
+  ["<C-bar>"] = actions.select_vertical,
+  ["<C-S-Bslash>"] = actions.select_vertical,
+  ["<C-Bslash>"] = actions.select_vertical,
+}
+
 require("telescope").setup({
   defaults = {
-    -- <C-/> in insert (and "?" in normal) shows this picker's keymaps.
+    -- which_key (this picker's keymap cheatsheet) stays on its defaults: <C-/>
+    -- in insert and "?" in normal. We free up <C-h> for scroll-left.
     mappings = {
-      i = { ["<C-h>"] = "which_key" },
+      i = picker_maps,
+      n = picker_maps,
     },
   },
 })
