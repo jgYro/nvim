@@ -68,6 +68,13 @@ vim.pack.add({
   -- yank2think: collect code selections into an LLM-ready markdown buffer.
   -- (Extracted from this config into its own plugin.)
   { src = "https://github.com/jgYro/yank2think.nvim" },
+  -- baleia: renders ANSI color escapes in a buffer. Optional dependency of
+  -- compile-mode (colorizes the *compilation* buffer). Listed before it.
+  { src = "https://github.com/m00qek/baleia.nvim", version = "v1.3.0" },
+  -- compile-mode: Emacs-style compilation mode. Runs build/test/grep commands
+  -- async into a *compilation* buffer and parses errors. Also depends on
+  -- plenary (listed above). Pinned to the v5.x line.
+  { src = "https://github.com/ej-shafran/compile-mode.nvim", version = vim.version.range("5") },
   -- oh-lucy: colorscheme.
   { src = "https://github.com/Yazeed1s/oh-lucy.nvim" },
 })
@@ -92,5 +99,6 @@ require("plugin_config.gitsigns")
 require("plugin_config.nvim-tree")
 require("plugin_config.twilight")
 require("plugin_config.yank2think")
+require("plugin_config.compile-mode")
 -- Colorscheme last, so it themes everything loaded above.
 require("plugin_config.oh-lucy")

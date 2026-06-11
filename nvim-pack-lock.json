@@ -1,9 +1,19 @@
 {
   "plugins": {
+    "baleia.nvim": {
+      "rev": "fb3aff021b2b64ef820d0230d2c22ebfaf71bb6a",
+      "src": "https://github.com/m00qek/baleia.nvim",
+      "version": "'v1.3.0'"
+    },
     "blink.cmp": {
       "rev": "78336bc89ee5365633bcf754d93df01678b5c08f",
       "src": "https://github.com/Saghen/blink.cmp",
       "version": "1.0.0 - 2.0.0"
+    },
+    "compile-mode.nvim": {
+      "rev": "ce34ad9e69cb6a2d9f71017f4cb090195fb9fc09",
+      "src": "https://github.com/ej-shafran/compile-mode.nvim",
+      "version": "5.0.0 - 6.0.0"
     },
     "conform.nvim": {
       "rev": "619363c30309d29ffa631e67c8183f2a72caa373",
