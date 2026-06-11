@@ -191,7 +191,9 @@ end, { desc = "Prev diagnostic" })
 -- clients (they re-attach when buffers reload via the vim.lsp.enable FileType
 -- autocmds), pulls external changes, and reloads each unmodified, file-backed
 -- buffer so syntax/LSP re-initialise. Modified buffers are skipped so unsaved
--- edits are never clobbered.
+-- edits are never clobbered. Copilot runs as an LSP client too, so stopping
+-- everything kills it; copilot.lua won't restart its server on its own, so we
+-- explicitly re-enable and re-attach it below.
 local function restart_lsp()
   for _, client in ipairs(vim.lsp.get_clients()) do
     vim.lsp.stop_client(client.id, true)
@@ -212,7 +214,17 @@ local function restart_lsp()
         end)
       end
     end
-    vim.notify("LSP restarted; buffers refreshed", vim.log.levels.INFO)
+
+    -- Re-enable Copilot: enable() re-runs the client setup (its server was
+    -- killed by the stop_client loop), then force-attach the current buffer.
+    -- pcall keeps the restart working even if copilot isn't loaded.
+    pcall(function()
+      local copilot = require("copilot.command")
+      copilot.enable()
+      copilot.attach({ force = true })
+    end)
+
+    vim.notify("LSP + Copilot restarted; buffers refreshed", vim.log.levels.INFO)
   end, 200)
 end
 vim.keymap.set("n", "<leader>rl", restart_lsp, { desc = "Restart LSP + refresh buffers" })
