@@ -19,6 +19,16 @@ wk.setup({
   delay = 200,
 })
 
+-- Group labels for the L / H jump prefixes (normal mode). L = jump forward,
+-- H = jump back. The actual mappings (Lq/Hq quickfix, Lc/Hc git change) carry
+-- their own desc; these just label the prefix node in the popup. Registering
+-- the group does not create a mapping, so the default L/H screen-motion still
+-- fires if you stop after the single key.
+wk.add({
+  { "L", group = "next → (jump forward)" },
+  { "H", group = "prev ← (jump back)" },
+})
+
 -- Group labels for the markdown-plus keymaps. Registered buffer-locally on
 -- markdown filetypes only, since that is the only place these prefixes are
 -- mapped. <localleader> resolves to <Space> (see config/options.lua).

@@ -24,9 +24,13 @@ require("gitsigns").setup({
       vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, desc = desc })
     end
 
-    -- Jump between hunks.
+    -- Jump between hunks (git changes). Bound both the Vim-idiomatic ]c/[c
+    -- and the Lc/Hc forms matching our Lq/Hq quickfix idiom (L = forward,
+    -- H = back). Buffer-local, since hunks only exist in tracked files.
     map("n", "]c", function() gs.nav_hunk("next") end, "Gitsigns: next hunk")
     map("n", "[c", function() gs.nav_hunk("prev") end, "Gitsigns: prev hunk")
+    map("n", "Lc", function() gs.nav_hunk("next") end, "Next git change (hunk)")
+    map("n", "Hc", function() gs.nav_hunk("prev") end, "Prev git change (hunk)")
 
     -- Stage / reset / preview the hunk under the cursor.
     map("n", "<leader>hs", gs.stage_hunk, "Gitsigns: stage hunk")
