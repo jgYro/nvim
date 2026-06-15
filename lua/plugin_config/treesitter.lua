@@ -36,6 +36,7 @@ require("treesitter-modules").setup({
     "lua", "vim", "vimdoc", "query",
     "markdown", "markdown_inline",
     "bash", "json", "yaml",
+    "diff", -- colours the ```diff blocks in the <leader>hc commit view
   },
   auto_install = true, -- install missing parsers when entering a buffer
   highlight = { enable = true },

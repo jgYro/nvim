@@ -58,11 +58,13 @@ local function focus_popup(win)
   end
   vim.api.nvim_set_current_win(win)
   vim.wo[win].winfixbuf = false
-  vim.keymap.set("n", "q", "<cmd>close<cr>", {
-    buffer = vim.api.nvim_win_get_buf(win),
-    nowait = true,
-    desc = "Close popup",
-  })
+  -- q and <C-o> both close the popup cleanly (which returns you to the window
+  -- and cursor you came from). Mapping <C-o> here means it never runs the float's
+  -- own jumplist -- which would otherwise load a buffer into the float and orphan
+  -- it -- so <C-o> always just takes you back out.
+  local pbuf = vim.api.nvim_win_get_buf(win)
+  vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = pbuf, nowait = true, desc = "Close popup" })
+  vim.keymap.set("n", "<C-o>", "<cmd>close<cr>", { buffer = pbuf, nowait = true, desc = "Close popup (back)" })
   return true
 end
 M.focus_popup = focus_popup
