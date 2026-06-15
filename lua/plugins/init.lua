@@ -68,6 +68,11 @@ vim.pack.add({
   -- yank2think: collect code selections into an LLM-ready markdown buffer.
   -- (Extracted from this config into its own plugin.)
   { src = "https://github.com/jgYro/yank2think.nvim" },
+  -- foldfloat: foldable tabbed-list popup (used by the <leader>hc commit view).
+  -- Currently loaded from the local dev checkout (~/dev/foldfloat.nvim, symlinked
+  -- into pack/dev/start). Once it's pushed to GitHub, uncomment the line below to
+  -- manage it via vim.pack and remove that symlink:
+  --   { src = "https://github.com/jgYro/foldfloat.nvim" },
   -- baleia: renders ANSI color escapes in a buffer. Optional dependency of
   -- compile-mode (colorizes the *compilation* buffer). Listed before it.
   { src = "https://github.com/m00qek/baleia.nvim", version = "v1.3.0" },

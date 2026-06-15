@@ -83,5 +83,13 @@ require("gitsigns").setup({
       local sha = first and first:match("^(%x+)")
       require("util.commit_view").open(dir, sha)
     end, "Gitsigns: show full commit for line")
+
+    -- <leader>hf: the full commit history of this file (every commit that
+    -- touched it) in the same foldable float -- one collapsible entry per
+    -- commit, expanding to that commit's diff for the file.
+    map("n", "<leader>hf", function()
+      local file = vim.api.nvim_buf_get_name(0)
+      require("util.commit_view").file_history(vim.fs.dirname(file), file)
+    end, "Gitsigns: file history (all commits)")
   end,
 })
