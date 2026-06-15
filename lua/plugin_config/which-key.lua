@@ -17,6 +17,15 @@ local wk = require("which-key")
 wk.setup({
   preset = "classic",
   delay = 200,
+  -- which-key's <auto> triggers deliberately skip single uppercase keys (only
+  -- Z is allowed), so it never fires the popup for our L/H jump prefixes. Add
+  -- them as explicit manual triggers, which bypass that single-key guard. Keep
+  -- <auto> so every other prefix (<leader>, g, z, …) still works.
+  triggers = {
+    { "<auto>", mode = "nxso" },
+    { "L", mode = "n" },
+    { "H", mode = "n" },
+  },
 })
 
 -- Group labels for the L / H jump prefixes (normal mode). L = jump forward,
