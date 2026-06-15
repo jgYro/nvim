@@ -29,6 +29,14 @@ vim.keymap.set({ "n", "x", "o" }, "s", function()
   require("flash").jump()
 end, { desc = "Flash jump" })
 
+-- Repeat the last f/F/t/T (flash char) motion on <C-l> / <C-h> instead of the
+-- default ; / , -- l = forward, h = back. remap=true routes them through
+-- flash's own ; / , handlers (so the labels still show). ; and , keep working
+-- too. In foldfloat popups <C-l>/<C-h> are remapped buffer-local (expand /
+-- collapse all), which take precedence there.
+vim.keymap.set({ "n", "x", "o" }, "<C-l>", ";", { remap = true, desc = "Flash repeat (forward)" })
+vim.keymap.set({ "n", "x", "o" }, "<C-h>", ",", { remap = true, desc = "Flash repeat (back)" })
+
 -- By default FlashLabel links to Substitute, which oh-lucy renders as a
 -- muted pink with dim text -> the jump labels are very hard to read. Force a
 -- deliberately clashing, maximum-contrast label (black on bright yellow)
