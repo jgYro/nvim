@@ -9,6 +9,10 @@
 -- Shows git add/change/delete signs in the sign column (the "gutter") and
 -- provides hunk navigation/staging. Defaults are sensible; we just turn it on.
 require("gitsigns").setup({
+  -- Attach to untracked (brand-new, not-yet-staged) files too, so they show
+  -- the `untracked` sign in the gutter. Off by default in gitsigns, which is
+  -- why new files otherwise show no signs until staged.
+  attach_to_untracked = true,
   -- Characters drawn in the gutter per hunk type.
   signs = {
     add = { text = "│" },
