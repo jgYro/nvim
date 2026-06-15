@@ -83,83 +83,22 @@ vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
 -- Popups you jump INTO (to scroll/read), with `q` to close. <C-o> also works
 -- to leave (winfixbuf is cleared on floats above). `q` is mapped buffer-local
 -- on the focused popup only, so it never affects other floats (Telescope etc.).
-local function focus_popup(win)
-  if not (win and win > 0 and vim.api.nvim_win_is_valid(win)) then
-    return
-  end
-  vim.api.nvim_set_current_win(win)
-  vim.wo[win].winfixbuf = false
-  vim.keymap.set("n", "q", "<cmd>close<cr>", {
-    buffer = vim.api.nvim_win_get_buf(win),
-    nowait = true,
-    desc = "Close popup",
-  })
-end
-
--- While reading a hover popup, grey out the code behind it so the docs stand
--- out. We lay a single buffer-wide extmark in a high priority (above treesitter)
--- that recolours every token to a muted grey, and clear it when the float
--- closes. The dim highlight is refreshed on :colorscheme.
-local dim_ns = vim.api.nvim_create_namespace("lsp_hover_dim")
-local dimmed_buf = nil
-
-local function set_hover_dim_hl()
-  vim.api.nvim_set_hl(0, "LspHoverDim", { fg = "#3b3e48" })
-end
-set_hover_dim_hl()
-vim.api.nvim_create_autocmd("ColorScheme", {
-  group = vim.api.nvim_create_augroup("lsp_hover_dim_hl", { clear = true }),
-  callback = set_hover_dim_hl,
-})
-
-local function undim_hover()
-  if dimmed_buf and vim.api.nvim_buf_is_valid(dimmed_buf) then
-    vim.api.nvim_buf_clear_namespace(dimmed_buf, dim_ns, 0, -1)
-  end
-  dimmed_buf = nil
-end
-
-local function dim_hover(buf)
-  undim_hover()
-  local last = vim.api.nvim_buf_line_count(buf) - 1
-  local last_line = vim.api.nvim_buf_get_lines(buf, last, last + 1, false)[1] or ""
-  vim.api.nvim_buf_set_extmark(buf, dim_ns, 0, 0, {
-    end_row = last,
-    end_col = #last_line,
-    hl_group = "LspHoverDim",
-    hl_eol = true,
-    priority = 10000,
-  })
-  dimmed_buf = buf
-end
+-- The focus + dim machinery lives in util.focus_float, shared with the gitsigns
+-- blame popup so hover and blame behave identically.
+local focus_float = require("util.focus_float")
+local focus_popup = focus_float.focus_popup
 
 -- K / <leader>k: hover, then jump into the popup (mirrors helix <space>k).
 -- hover is async, so instead of a fixed delay we poll briefly and focus the
 -- instant the float exists -- snappy for fast servers, still works for slow
 -- ones. The source buffer is dimmed while the popup is up, restored on close.
-local function focus_hover_when_ready(src_buf, tries)
-  local win = vim.b[src_buf].lsp_floating_preview
-  if win and vim.api.nvim_win_is_valid(win) then
-    dim_hover(src_buf)
-    focus_popup(win)
-    -- Undim as soon as the hover float closes (q, cursor move, <C-o> away).
-    vim.api.nvim_create_autocmd("WinClosed", {
-      pattern = tostring(win),
-      once = true,
-      callback = undim_hover,
-    })
-  elseif tries > 0 then
-    vim.defer_fn(function()
-      focus_hover_when_ready(src_buf, tries - 1)
-    end, 16)
-  end
-end
-
 local function hover_focus()
   local src_buf = vim.api.nvim_get_current_buf()
   vim.lsp.buf.hover()
   -- ~50 * 16ms ≈ 0.8s ceiling; focuses on the first tick the float is ready.
-  focus_hover_when_ready(src_buf, 50)
+  focus_float.focus_when_ready(src_buf, function()
+    return vim.b[src_buf].lsp_floating_preview
+  end, 50)
 end
 vim.keymap.set("n", "K", hover_focus, { desc = "Hover (enter popup)" })
 vim.keymap.set("n", "<leader>k", hover_focus, { desc = "Hover (enter popup)" })

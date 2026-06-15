@@ -8,6 +8,8 @@
 
 -- Shows git add/change/delete signs in the sign column (the "gutter") and
 -- provides hunk navigation/staging. Defaults are sensible; we just turn it on.
+local focus_float = require("util.focus_float")
+
 require("gitsigns").setup({
   -- Attach to untracked (brand-new, not-yet-staged) files too, so they show
   -- the `untracked` sign in the gutter. Off by default in gitsigns, which is
@@ -40,6 +42,29 @@ require("gitsigns").setup({
     map("n", "<leader>hs", gs.stage_hunk, "Gitsigns: stage hunk")
     map("n", "<leader>hr", gs.reset_hunk, "Gitsigns: reset hunk")
     map("n", "<leader>hp", gs.preview_hunk, "Gitsigns: preview hunk")
-    map("n", "<leader>hb", function() gs.blame_line({ full = true }) end, "Gitsigns: blame line")
+
+    -- <leader>hb: blame the current line, then jump into the popup and dim the
+    -- code behind it -- the same focus + dim behavior as the LSP hover (K),
+    -- via the shared util.focus_float helper. gitsigns doesn't hand back the
+    -- float's window id, so we snapshot the floats that are open before the
+    -- call and poll for the new one.
+    map("n", "<leader>hb", function()
+      local src = vim.api.nvim_get_current_buf()
+      local before = {}
+      for _, w in ipairs(vim.api.nvim_list_wins()) do
+        if vim.api.nvim_win_get_config(w).relative ~= "" then
+          before[w] = true
+        end
+      end
+      gs.blame_line({ full = true })
+      focus_float.focus_when_ready(src, function()
+        for _, w in ipairs(vim.api.nvim_list_wins()) do
+          if vim.api.nvim_win_get_config(w).relative ~= "" and not before[w] then
+            return w
+          end
+        end
+        return nil
+      end, 50)
+    end, "Gitsigns: blame line (focus + dim)")
   end,
 })
