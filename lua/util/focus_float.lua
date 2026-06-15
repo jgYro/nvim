@@ -76,11 +76,31 @@ function M.focus_when_ready(src_buf, find_win, tries)
   if win and win > 0 and vim.api.nvim_win_is_valid(win) then
     dim(src_buf)
     focus_popup(win)
-    -- Undim as soon as the float closes (q, cursor move, <C-o> away).
+
+    -- Tear down (undim + close the popup) whenever we leave it, by ANY means.
+    -- WinClosed alone isn't enough: <C-o> inside a focused popup runs jumplist
+    -- navigation, which loads the previous buffer INTO the float window without
+    -- closing it -- leaving the popup orphaned and the dim stuck on. Hooking
+    -- WinLeave/BufLeave on the popup buffer catches that (and plain window
+    -- switches); WinClosed still covers `q`.
+    local pbuf = vim.api.nvim_win_get_buf(win)
+    local function teardown()
+      undim()
+      vim.schedule(function()
+        if vim.api.nvim_win_is_valid(win) then
+          pcall(vim.api.nvim_win_close, win, true)
+        end
+      end)
+    end
     vim.api.nvim_create_autocmd("WinClosed", {
       pattern = tostring(win),
       once = true,
       callback = undim,
+    })
+    vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
+      buffer = pbuf,
+      once = true,
+      callback = teardown,
     })
   elseif tries > 0 then
     vim.defer_fn(function()

@@ -66,5 +66,25 @@ require("gitsigns").setup({
         return nil
       end, 50)
     end, "Gitsigns: blame line (focus + dim)")
+
+    -- <leader>hc: open the FULL commit that last touched the current line in a
+    -- vsplit -- every hunk that commit changed, not just the one under the
+    -- cursor. (The blame popup only ever shows the single nearest hunk; its
+    -- "Hunk N of M" is static, with no way to step through the rest.) We
+    -- resolve the line's commit via git blame, then hand the sha to show_commit.
+    map("n", "<leader>hc", function()
+      local file = vim.api.nvim_buf_get_name(0)
+      local lnum = vim.api.nvim_win_get_cursor(0)[1]
+      local first = vim.fn.systemlist({
+        "git", "-C", vim.fs.dirname(file),
+        "blame", "-L", lnum .. "," .. lnum, "--porcelain", "--", file,
+      })[1]
+      local sha = first and first:match("^(%x+)")
+      if not sha or sha:match("^0+$") then
+        vim.notify("No commit for this line (uncommitted?)", vim.log.levels.WARN)
+        return
+      end
+      gs.show_commit(sha, "vsplit")
+    end, "Gitsigns: show full commit for line")
   end,
 })
