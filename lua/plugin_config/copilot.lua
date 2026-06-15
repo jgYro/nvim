@@ -59,7 +59,9 @@ require("copilot").setup({
   -- Inline ghost-text suggestions.
   suggestion = {
     enabled = true,
-    auto_trigger = true, -- show suggestions automatically as you type
+    -- Don't show suggestions automatically; only on explicit request (<C-i>
+    -- below, or <C-j>/<C-k> which also fire a request when none is showing).
+    auto_trigger = false,
     keymap = {
       accept = "<C-l>",
       accept_word = false,
@@ -82,3 +84,14 @@ require("copilot").setup({
     },
   },
 })
+
+-- Explicitly request an inline suggestion (auto_trigger is off). suggestion.next()
+-- fires a fresh request when nothing is showing, then cycles on repeat.
+--
+-- NOTE: in most terminals <C-i> and <Tab> are the same byte, so this would also
+-- take over <Tab> in insert mode. Terminals speaking the kitty keyboard protocol
+-- (kitty/ghostty/wezterm/foot) keep them distinct, leaving <Tab> alone. Verify
+-- with `:verbose imap <C-i>` vs `:verbose imap <Tab>`.
+vim.keymap.set("i", "<C-i>", function()
+  require("copilot.suggestion").next()
+end, { desc = "Copilot: request inline suggestion" })
