@@ -15,6 +15,7 @@
 -- top (~line 86) or bottom (~line 146) of the screen. This is just Vim's
 -- H/M/L combined into one cycling key. (zl's default is horizontal
 -- scroll-right, unused here since lines wrap.)
+--
 local cursor_pos_state = 0
 vim.keymap.set("n", "zl", function()
   local cmds = { "M", "H", "L" } -- middle, top (High), bottom (Low) of screen
