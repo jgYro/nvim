@@ -35,6 +35,10 @@
       "rev": "fcea7ff883235d9024dc41e638f164a450c14ca2",
       "src": "https://github.com/folke/flash.nvim"
     },
+    "foldfloat.nvim": {
+      "rev": "8dfa68956e3e645dc76df4d85a9c957dc297b549",
+      "src": "https://github.com/jgYro/foldfloat.nvim"
+    },
     "gitsigns.nvim": {
       "rev": "25050e4ed39e628282831d4cbecb1850454ce915",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
