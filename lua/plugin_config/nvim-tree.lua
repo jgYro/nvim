@@ -66,7 +66,21 @@ local function on_attach(bufnr)
     end)
   end
   vim.keymap.set("n", "<C-l>", function() hscroll(8) end, opts("Scroll preview right"))
-  vim.keymap.set("n", "<C-h>", function() hscroll(-8) end, opts("Scroll preview left"))
+
+  -- preview_open: is a preview float currently up? hscroll only does anything
+  -- while one is, so C-h reuses it: scroll the preview left if open, otherwise
+  -- collapse every expanded directory in the tree.
+  local function preview_open()
+    local ok, mgr = pcall(require, "nvim-tree-preview.manager")
+    return ok and mgr.instance and mgr.instance:is_valid()
+  end
+  vim.keymap.set("n", "<C-h>", function()
+    if preview_open() then
+      hscroll(-8)
+    else
+      api.tree.collapse_all()
+    end
+  end, opts("Collapse all dirs / scroll preview left"))
 
   -- Open the node under the cursor in a split: C-- horizontal, C-| vertical.
   -- Vertical covers every way Ctrl+| can arrive: <C-bar> (kitty), <C-S-Bslash>
@@ -75,6 +89,38 @@ local function on_attach(bufnr)
   vim.keymap.set("n", "<C-bar>", api.node.open.vertical, opts("Open: vertical split"))
   vim.keymap.set("n", "<C-S-Bslash>", api.node.open.vertical, opts("Open: vertical split"))
   vim.keymap.set("n", "<C-Bslash>", api.node.open.vertical, opts("Open: vertical split"))
+
+  -- h: walk outward. On an open directory, collapse it. Otherwise (a file, or a
+  -- closed directory) jump up to the parent directory. So from a file deep in a
+  -- tree, the first h lands on its parent dir and a second h closes that dir.
+  vim.keymap.set("n", "h", function()
+    local ok, node = pcall(api.tree.get_node_under_cursor)
+    if ok and node then
+      if node.type == "directory" and node.open then
+        api.node.open.edit() -- toggles an open dir shut
+      else
+        api.node.navigate.parent()
+      end
+    end
+  end, opts("Up to parent / close dir"))
+
+  -- l: walk inward, the mirror of h. On a closed directory, expand it. On an
+  -- already-open directory, step the cursor onto its first child. On a file, open
+  -- it. So repeated l drills down into the tree without ever collapsing anything.
+  vim.keymap.set("n", "l", function()
+    local ok, node = pcall(api.tree.get_node_under_cursor)
+    if ok and node then
+      if node.type == "directory" then
+        if node.open then
+          vim.cmd("normal! j") -- already open: drop onto the first child
+        else
+          api.node.open.edit() -- closed: expand it
+        end
+      else
+        api.node.open.edit() -- file: open it
+      end
+    end
+  end, opts("Into dir / open file"))
 
   -- Tab: preview a file (and toggle focus into it); on a directory, expand it.
   vim.keymap.set("n", "<Tab>", function()

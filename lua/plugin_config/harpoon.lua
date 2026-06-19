@@ -49,10 +49,12 @@ end
 vim.keymap.set("n", "<leader>a", mark.add_file, { desc = "Harpoon add file" })
 vim.keymap.set("n", "<C-e>", ui.toggle_quick_menu, { desc = "Harpoon menu" })
 
--- Jump straight to harpoon slots 1-4.
--- NOTE: <C-;> usually only works in GUI clients (Neovide); most terminals
--- can't send Ctrl-; as a distinct key. Swap it if slot 4 doesn't fire.
+-- Jump straight to harpoon slots 1-5. All terminal-safe Ctrl keys.
+-- NOTE: <C-b>/<C-f> override the built-in page-up/page-down scroll in normal
+-- mode -- intentional, harpoon nav is preferred here. (<C-;> was dropped: most
+-- terminals can't send Ctrl-; as a distinct key, so it only fired in GUIs.)
 vim.keymap.set("n", "<C-j>", function() ui.nav_file(1) end, { desc = "Harpoon file 1" })
 vim.keymap.set("n", "<C-k>", function() ui.nav_file(2) end, { desc = "Harpoon file 2" })
 vim.keymap.set("n", "<C-l>", function() ui.nav_file(3) end, { desc = "Harpoon file 3" })
-vim.keymap.set("n", "<C-;>", function() ui.nav_file(4) end, { desc = "Harpoon file 4" })
+vim.keymap.set("n", "<C-b>", function() ui.nav_file(4) end, { desc = "Harpoon file 4" })
+vim.keymap.set("n", "<C-f>", function() ui.nav_file(5) end, { desc = "Harpoon file 5" })

@@ -78,6 +78,9 @@ vim.pack.add({
   -- async into a *compilation* buffer and parses errors. Also depends on
   -- plenary (listed above). Pinned to the v5.x line.
   { src = "https://github.com/ej-shafran/compile-mode.nvim", version = vim.version.range("5") },
+  -- csvview: align CSV/TSV columns in-buffer (highlight or border mode).
+  -- Zero dependencies.
+  { src = "https://github.com/hat0uma/csvview.nvim" },
   -- oh-lucy: colorscheme.
   { src = "https://github.com/Yazeed1s/oh-lucy.nvim" },
 })
@@ -103,5 +106,6 @@ require("plugin_config.nvim-tree")
 require("plugin_config.twilight")
 require("plugin_config.yank2think")
 require("plugin_config.compile-mode")
+require("plugin_config.csvview")
 -- Colorscheme last, so it themes everything loaded above.
 require("plugin_config.oh-lucy")
