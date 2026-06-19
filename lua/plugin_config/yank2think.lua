@@ -25,6 +25,17 @@ require("yank2think").setup({
   register = "+",
   prompt = true,
   section_pattern = "^## ",
+  -- ask (<leader>? in visual): one-off, read-only query sub-config. The selection
+  -- (path + range + fenced code) is piped on stdin, the question is appended as
+  -- the final CLI arg, and stdout is shown in a hover-like float. `claude -p` is
+  -- the actual non-interactive flag (the CLI has no -q); swap in a wrapper here.
+  -- `context` bounds every question (prepended) -- the prompt's standing rules.
+  ask = {
+    keymap = "<leader>?",
+    cmd = "claude -p",
+    default_prompt = "What does this code do?",
+    context = "Don't ask to make changes, just answer the question to the best of your ability.",
+  },
   format = function(entry)
     local out = { ("## %s (%s)"):format(entry.path, entry.range) }
     if entry.prompt and entry.prompt ~= "" then

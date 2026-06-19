@@ -99,3 +99,24 @@ end, { desc = "Next parameter" })
 vim.keymap.set({ "n", "x", "o" }, "[a", function()
   move.goto_previous_start("@parameter.inner", "textobjects")
 end, { desc = "Prev parameter" })
+
+-- L/H motions matching the Lq/Hq quickfix and Lg/Hg git-hunk idiom (L = forward,
+-- H = back). Treesitter-driven next/prev for the common structural objects:
+--   Lf/Hf function · Lc/Hc class · LC/HC comment · La/Ha argument (parameter)
+-- These move by the object's *start*; comment uses .outer (no inner). Each is a
+-- {next_query, prev_query, label} triple wired in the loop below.
+local ts_motions = {
+  f = { "@function.outer", "function" },
+  c = { "@class.outer", "class" },
+  C = { "@comment.outer", "comment" },
+  a = { "@parameter.inner", "argument" },
+}
+for key, spec in pairs(ts_motions) do
+  local obj, label = spec[1], spec[2]
+  vim.keymap.set({ "n", "x", "o" }, "L" .. key, function()
+    move.goto_next_start(obj, "textobjects")
+  end, { desc = "Next " .. label })
+  vim.keymap.set({ "n", "x", "o" }, "H" .. key, function()
+    move.goto_previous_start(obj, "textobjects")
+  end, { desc = "Prev " .. label })
+end

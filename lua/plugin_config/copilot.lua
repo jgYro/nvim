@@ -9,7 +9,7 @@
 -- copilot-lsp globals.
 -- Packer set these in the dependency's `init` hook; vim.pack has no such
 -- hook, so set them as plain globals before copilot-lsp is used.
-vim.g.copilot_nes_debounce = 500
+vim.g.copilot_nes_debounce = 100
 
 -- Resolve a Node >= 22 for the Copilot server. copilot.lua otherwise calls
 -- bare `node` from PATH, which under nvm resolves to v20 (too old) and is
@@ -49,8 +49,12 @@ require("copilot").setup({
   nes = {
     enabled = true,
     keymap = {
-      -- <leader>l (not <leader>p) so it never contends with clipboard paste.
-      accept_and_goto = "<C-p>",
+      -- <Tab> (normal mode) accepts the green suggestion and jumps to the next
+      -- edit, so a cascade of edits is just Tab-Tab-Tab. copilot wraps this with
+      -- passthrough: when no NES is pending, <Tab> falls back to its normal job
+      -- (jumplist-forward / <C-i>), so nothing is lost. Keeping accept off <C-p>
+      -- leaves <C-p> for flash repeat-back.
+      accept_and_goto = "<Tab>",
       accept = false,
       dismiss = "<Esc>",
     },

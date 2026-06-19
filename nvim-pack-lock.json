@@ -111,7 +111,7 @@
       "src": "https://github.com/folke/which-key.nvim"
     },
     "yank2think.nvim": {
-      "rev": "c6b67135cf0e00c64e133cbefe46321f7e11545b",
+      "rev": "519c1c501014bee6970f66e4ca44917f92cdb063",
       "src": "https://github.com/jgYro/yank2think.nvim"
     }
   }
