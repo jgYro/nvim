@@ -65,9 +65,25 @@ vim.keymap.set("n", "<leader>km", builtin.keymaps, { desc = "Keymaps" })
 vim.keymap.set("n", "<leader>lr", builtin.lsp_references, { desc = "LSP references" })
 vim.keymap.set("n", "<leader>sp", builtin.spell_suggest, { desc = "Spelling suggestions" })
 
+-- Diagnostics: <leader>d this buffer, <leader>D the whole workspace (every
+-- buffer the LSP has loaded). Mirrors the lowercase/uppercase = file/workspace
+-- split used by the symbol pickers below.
+vim.keymap.set("n", "<leader>d", function()
+  builtin.diagnostics({ bufnr = 0 })
+end, { desc = "Diagnostics (this file)" })
+vim.keymap.set("n", "<leader>D", builtin.diagnostics, { desc = "Diagnostics (workspace)" })
+
+-- Symbols under the <Space>l (lsp) prefix: <leader>ls this file, <leader>lS the
+-- workspace (same pickers as <leader>fs / <leader>fS).
+vim.keymap.set("n", "<leader>ls", builtin.lsp_document_symbols, { desc = "Document symbols (this file)" })
+vim.keymap.set("n", "<leader>lS", builtin.lsp_dynamic_workspace_symbols, { desc = "Workspace symbols" })
+
 -- Group label for the <Space>f prefix in the which-key popup. pcall keeps
 -- this file independent of whether which-key is installed.
 local ok, wk = pcall(require, "which-key")
 if ok then
-  wk.add({ { "<leader>f", group = "find (telescope)" } })
+  wk.add({
+    { "<leader>f", group = "find (telescope)" },
+    { "<leader>l", group = "lsp (telescope)" },
+  })
 end

@@ -103,26 +103,21 @@ end
 vim.keymap.set("n", "K", hover_focus, { desc = "Hover (enter popup)" })
 vim.keymap.set("n", "<leader>k", hover_focus, { desc = "Hover (enter popup)" })
 
--- <leader>d: open the diagnostic float and jump into it (synchronous).
--- open_float is line-scoped, so it silently does nothing when the cursor isn't
--- on a diagnostic. To avoid "<leader>d does nothing", fall back to jumping to
--- the nearest diagnostic (wrapping) and showing its float -- so as long as the
--- buffer has any diagnostic, <leader>d always surfaces one.
-vim.keymap.set("n", "<leader>d", function()
+-- <leader>d / <leader>D are telescope diagnostics pickers, defined in
+-- plugin_config/telescope.lua. (Line-stepping stays here: Ld / Hd below.)
+
+-- <leader>ld: hover the diagnostic in a float and jump into it. open_float is
+-- line-scoped and silently does nothing off a diagnostic, so fall back to the
+-- nearest diagnostic (wrapping) -- as long as the buffer has one, this surfaces
+-- it. q / <C-o> close the popup (focus_popup wires those).
+vim.keymap.set("n", "<leader>ld", function()
   local fbuf, fwin = vim.diagnostic.open_float()
   if not fwin then
     vim.diagnostic.jump({ count = 1, wrap = true })
     fbuf, fwin = vim.diagnostic.open_float()
   end
   focus_popup(fwin or (fbuf and vim.fn.bufwinid(fbuf)) or nil)
-end, { desc = "Diagnostic (enter popup)" })
-
--- <leader>D: gather diagnostics from every loaded buffer into the quickfix list
--- and open it -- "workspace-wide" as far as the LSP has analysed (vim.diagnostic
--- only knows about buffers that have been loaded). Step through with Lq/Hq.
-vim.keymap.set("n", "<leader>D", function()
-  vim.diagnostic.setqflist({ open = true })
-end, { desc = "Workspace diagnostics (quickfix)" })
+end, { desc = "Diagnostic hover (enter popup)" })
 
 -- Step through diagnostics, matching the Lq/Hq quickfix idiom. on_jump opens
 -- the float after moving (the old `float = true` option is deprecated).

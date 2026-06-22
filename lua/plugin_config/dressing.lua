@@ -24,3 +24,15 @@ require("dressing").setup({
     builtin = { border = "rounded" },
   },
 })
+
+-- The builtin select list (code actions, etc.) is just a buffer you move through
+-- with j/k. Add <C-n>/<C-p> to step down/up the choices, buffer-local so they
+-- win over the global flash-repeat <C-n>/<C-p>. nowait so they fire immediately.
+vim.api.nvim_create_autocmd("FileType", {
+  group = vim.api.nvim_create_augroup("dressing_select_nav", { clear = true }),
+  pattern = "DressingSelect",
+  callback = function(ev)
+    vim.keymap.set("n", "<C-n>", "j", { buffer = ev.buf, nowait = true, desc = "Next choice" })
+    vim.keymap.set("n", "<C-p>", "k", { buffer = ev.buf, nowait = true, desc = "Prev choice" })
+  end,
+})
