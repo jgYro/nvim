@@ -152,7 +152,7 @@ Most LSP keymaps are Neovim defaults (no custom mapping needed):
 | `q` / `<C-o>`     | Close / leave a focused popup                          |
 | `<C-s>` (insert)  | Signature help                                         |
 | `[d` / `]d`       | Previous / next diagnostic                             |
-| `gd`              | Go to definition _(custom)_                            |
+| `gd`              | Go to definition via location list _(custom)_          |
 | `Ld` / `Hd`       | Next / previous diagnostic _(custom)_                  |
 
 Completion (blink, `default` preset): `<CR>` accepts a selected item (nothing

@@ -78,7 +78,9 @@ vim.api.nvim_create_autocmd("WinEnter", {
 -- Extra keymaps on top of Neovim's LSP defaults (grn/gra/grr/gri/grt/gO, K,
 -- <C-]>, <C-s>, [d/]d). In markdown buffers markdown-plus rebinds gd to
 -- "follow TOC link" (buffer-local), which correctly wins there.
-vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
+vim.keymap.set("n", "gd", function()
+  vim.lsp.buf.definition({ loclist = true })
+end, { desc = "Go to definition" })
 
 -- Popups you jump INTO (to scroll/read), with `q` to close. <C-o> also works
 -- to leave (winfixbuf is cleared on floats above). `q` is mapped buffer-local
