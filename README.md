@@ -67,6 +67,7 @@ Leader is `<Space>`.
 | `gh` / `gl`               | n, v | Jump to first non-blank / end of line         |
 | `<C-d>` / `<C-u>`         | n    | Half-page scroll, kept centered               |
 | `n` / `N`                 | n    | Next / previous search match, kept centered   |
+| `<C-w>H/J/K/L`, then HJKL | n    | Resize current window in 5-cell steps         |
 | `<leader>u` / `<leader>U` | n    | Open a terminal (vertical / horizontal split) |
 | `<C-u>`                   | t    | Exit terminal mode                            |
 | `Lq` / `Hq`               | n    | Next / previous quickfix entry                |
