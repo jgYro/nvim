@@ -68,7 +68,8 @@ Leader is `<Space>`.
 | `<C-d>` / `<C-u>`         | n    | Half-page scroll, kept centered               |
 | `n` / `N`                 | n    | Next / previous search match, kept centered   |
 | `<C-w>H/J/K/L`, then HJKL | n    | Resize current window in 5-cell steps         |
-| `<leader>u` / `<leader>U` | n    | Open a terminal (vertical / horizontal split) |
+| `<leader>uu` / `<leader>uU` | n    | Open a terminal (vertical / horizontal split) |
+| `<leader>uc`              | n    | Open Codex in a floating terminal             |
 | `<C-u>`                   | t    | Exit terminal mode                            |
 | `Lq` / `Hq`               | n    | Next / previous quickfix entry                |
 | `<leader><leader>w`       | n    | Toggle word wrap                              |
@@ -179,10 +180,10 @@ save: `stylua` (Lua), `prettier` (JS/TS/HTML/CSS/JSON/YAML/Markdown),
 
 | Key               | Mode | Action                                     |
 | ----------------- | ---- | ------------------------------------------ |
-| `<C-l>`           | i    | Accept suggestion                          |
+| `<C-l>`           | i    | Accept inline or Next Edit suggestion      |
 | `<C-j>` / `<C-k>` | i    | Next / previous suggestion                 |
 | `<C-h>`           | i    | Dismiss suggestion                         |
-| `<leader>l`       | n    | Accept Next Edit Suggestion and jump to it |
+| `<Tab>`           | n    | Accept Next Edit Suggestion and jump to it |
 
 Markdown buffers also get the [markdown-plus
 keymaps](https://github.com/YousefHadder/markdown-plus.nvim/wiki/5.Keymaps)

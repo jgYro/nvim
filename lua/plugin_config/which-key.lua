@@ -36,6 +36,7 @@ wk.setup({
 wk.add({
   { "L", group = "next → (jump forward)" },
   { "H", group = "prev ← (jump back)" },
+  { "<leader>u", group = "terminal" },
 })
 
 -- Group labels for the markdown-plus keymaps. Registered buffer-locally on

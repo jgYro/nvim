@@ -67,7 +67,7 @@ require("copilot").setup({
     -- below, or <C-j>/<C-k> which also fire a request when none is showing).
     auto_trigger = false,
     keymap = {
-      accept = "<C-l>",
+      accept = false,
       accept_word = false,
       accept_line = false,
       next = "<C-j>",
@@ -88,6 +88,22 @@ require("copilot").setup({
     },
   },
 })
+
+local function accept_copilot_suggestion()
+  local bufnr = vim.api.nvim_get_current_buf()
+
+  if vim.b[bufnr].nes_state then
+    local ok, nes = pcall(require, "copilot-lsp.nes")
+    if ok and nes.apply_pending_nes(bufnr) then
+      nes.walk_cursor_end_edit(bufnr)
+      return
+    end
+  end
+
+  require("copilot.suggestion").accept()
+end
+
+vim.keymap.set("i", "<C-l>", accept_copilot_suggestion, { desc = "Copilot: accept suggestion" })
 
 -- Explicitly request an inline suggestion (auto_trigger is off). suggestion.next()
 -- fires a fresh request when nothing is showing, then cycles on repeat.
