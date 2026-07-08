@@ -8,18 +8,22 @@
 
 -- Review external file changes before reloading. watcher.nvim still detects
 -- changes, but automatic review dispatch is routed into the shared Codex
--- dashboard instead of opening its own picker/float over Codex terminals.
+-- workspace instead of opening its own picker/float over Codex terminals.
 local watcher = require("watcher")
 local codex_sessions = require("util.codex_sessions")
 
 codex_sessions.setup({
+  status = {
+    -- Codex is an interactive terminal, so "done" means no output for this long.
+    idle_ms = 1200,
+  },
   watcher = {
     -- When true, watcher changes are accepted as soon as watcher detects them.
-    -- Leave this off by default because accepting a changed open buffer runs
-    -- watcher.nvim's normal accept action (`:edit!`).
-    auto_accept = false,
+    -- Accept detected watcher changes by default. For an open changed buffer,
+    -- watcher.nvim's normal accept action reloads from disk (`:edit!`).
+    auto_accept = true,
     -- Keep detection, but route automatic review dispatch into the Codex
-    -- dashboard instead of opening a picker/float over the Codex terminal.
+    -- workspace instead of opening a picker/float over the Codex terminal.
     intercept_review = true,
   },
 })
@@ -35,6 +39,6 @@ watcher.setup({
 })
 codex_sessions.attach_watcher(watcher)
 
--- Review watcher changes in the shared Codex dashboard instead of opening a
+-- Review watcher changes in the shared Codex workspace instead of opening a
 -- separate watcher picker/float over an active Codex terminal.
 vim.keymap.set("n", "<leader>w", codex_sessions.changes, { desc = "Watcher: review changes" })

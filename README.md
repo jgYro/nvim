@@ -69,14 +69,14 @@ Leader is `<Space>`.
 | `n` / `N`                 | n    | Next / previous search match, kept centered   |
 | `<C-w>H/J/K/L`, then HJKL | n    | Resize current window in 5-cell steps         |
 | `<leader>uu` / `<leader>uU` | n    | Open a terminal (vertical / horizontal split) |
-| `<leader>uc`              | n    | Toggle the current Codex floating session     |
-| `<leader>uC`              | n    | Create a new Codex floating session           |
+| `<leader>uc`              | n    | Toggle the current Codex workspace session    |
+| `<leader>uC`              | n    | Create a new Codex workspace session          |
 | `<leader>uk`              | n    | Show Codex workspace overview                 |
 | `<leader>uj`              | n    | Show watcher changed files                    |
 | `<leader>uA`              | n    | Toggle watcher auto-accept                    |
-| `<C-h>` / `<C-l>`         | n, t | Previous / next Codex session in Codex floats |
-| `<C-k>`                   | n, t | Codex workspace overview in Codex floats      |
-| `<C-j>`                   | n, t | Watcher changed files in Codex floats         |
+| `<C-h>` / `<C-l>`         | n, t | Previous / next Codex workspace session       |
+| `<C-k>` / `<C-j>`         | n, t | Previous / next Codex workspace view          |
+| `<C-o>`                   | n, t | Close Codex workspace and return to main buffer |
 | `<C-u>`                   | t    | Exit terminal mode                            |
 | `Lq` / `Hq`               | n    | Next / previous quickfix entry                |
 | `<leader><leader>w`       | n    | Toggle word wrap                              |
@@ -201,12 +201,16 @@ under the `<localleader>` (`<Space>`) prefix.
 Files changed by another program (formatter, AI, `git checkout`, etc.) are
 detected automatically — a `:checktime` on focus/idle/cursor-hold. Detected
 changes are collected by watcher.nvim and shown in the shared Codex workspace
-dashboard instead of popping a separate watcher UI over an active Codex
-terminal (`autoread` is off, so nothing reloads silently).
+instead of popping a separate watcher UI over an active Codex terminal
+(`autoread` is off, so nothing reloads silently).
 
-Open changes with `<leader>w`, `<leader>uj`, or `<C-j>` inside a Codex float.
-The Codex dashboard has `overview`, `sessions`, and `changes` tabs; use
-`<C-j>` / `<C-k>` inside the dashboard to move between them.
+Open changes with `<leader>w`, `<leader>uj`, or by cycling workspace views with
+`<C-j>` / `<C-k>`. The Codex workspace has `terminal`, `overview`, `sessions`,
+and `changes` views; the terminal view is the live Codex terminal buffer, not a
+dashboard layered over it. Session IDs are numbered `0`, `1`, `2`, etc. in the
+status line; `busy:N` marks a running session, `ask:N` marks one waiting on
+input, and `done:N` briefly marks one that just went idle after output.
+The idle threshold is `status.idle_ms` in `lua/plugin_config/watcher.lua`.
 
 - **`a` Accept** → take the change (reloads the buffer from disk). The buffer
   stays editable, so to take the change _and tweak it_ you just Accept, edit,
@@ -216,7 +220,7 @@ The Codex dashboard has `overview`, `sessions`, and `changes` tabs; use
   again).
 - **`A` Accept all** → accept every pending watcher change.
 - **`T` Auto-accept** → toggle the boolean that accepts detected changes as soon
-  as watcher sees them. It defaults to off in `lua/plugin_config/watcher.lua`.
+  as watcher sees them. It defaults to on in `lua/plugin_config/watcher.lua`.
 
 Detection is event-driven (focus / idle / buffer-enter) plus a 1s background
 poll, so the pending list updates on its own even while you sit idle.
