@@ -69,7 +69,14 @@ Leader is `<Space>`.
 | `n` / `N`                 | n    | Next / previous search match, kept centered   |
 | `<C-w>H/J/K/L`, then HJKL | n    | Resize current window in 5-cell steps         |
 | `<leader>uu` / `<leader>uU` | n    | Open a terminal (vertical / horizontal split) |
-| `<leader>uc`              | n    | Open Codex in a floating terminal             |
+| `<leader>uc`              | n    | Toggle the current Codex floating session     |
+| `<leader>uC`              | n    | Create a new Codex floating session           |
+| `<leader>uk`              | n    | Show Codex workspace overview                 |
+| `<leader>uj`              | n    | Show watcher changed files                    |
+| `<leader>uA`              | n    | Toggle watcher auto-accept                    |
+| `<C-h>` / `<C-l>`         | n, t | Previous / next Codex session in Codex floats |
+| `<C-k>`                   | n, t | Codex workspace overview in Codex floats      |
+| `<C-j>`                   | n, t | Watcher changed files in Codex floats         |
 | `<C-u>`                   | t    | Exit terminal mode                            |
 | `Lq` / `Hq`               | n    | Next / previous quickfix entry                |
 | `<leader><leader>w`       | n    | Toggle word wrap                              |
@@ -192,35 +199,31 @@ under the `<localleader>` (`<Space>`) prefix.
 ## External file changes
 
 Files changed by another program (formatter, AI, `git checkout`, etc.) are
-detected automatically — a `:checktime` on focus/idle/cursor-hold. **Every**
-external change opens a **floating, scrollable diff** of the change (`autoread`
-is off, so nothing reloads silently). Scroll it like any window, then press a
-key to act:
+detected automatically — a `:checktime` on focus/idle/cursor-hold. Detected
+changes are collected by watcher.nvim and shown in the shared Codex workspace
+dashboard instead of popping a separate watcher UI over an active Codex
+terminal (`autoread` is off, so nothing reloads silently).
 
-```
-  ╭───────────── external change: backend/main.go ─────────────╮
-  │ --- buffer (yours)                                         │
-  │ +++ disk (external)                                        │
-  │ @@ -10,3 +10,4 @@                                           │
-  │ -  json.NewEncoder(w).Encode(msg)                          │
-  │ +  _ = json.NewEncoder(w).Encode(msg)                      │
-  │ +  log.Println("served")                                   │
-  ╰──────────── (a)ccept   (r)eject   (q)cancel ───────────────╯
-```
+Open changes with `<leader>w`, `<leader>uj`, or `<C-j>` inside a Codex float.
+The Codex dashboard has `overview`, `sessions`, and `changes` tabs; use
+`<C-j>` / `<C-k>` inside the dashboard to move between them.
 
 - **`a` Accept** → take the change (reloads the buffer from disk). The buffer
   stays editable, so to take the change _and tweak it_ you just Accept, edit,
   and `:w`.
 - **`r` Reject** → discard the change (writes your buffer over the file on disk).
-- **`q` / `<Esc>` Cancel** → leave things as-is (won't nag again until the file
-  changes again).
+- **`x` Dismiss** → leave things as-is (won't nag again until the file changes
+  again).
+- **`A` Accept all** → accept every pending watcher change.
+- **`T` Auto-accept** → toggle the boolean that accepts detected changes as soon
+  as watcher sees them. It defaults to off in `lua/plugin_config/watcher.lua`.
 
 Detection is event-driven (focus / idle / buffer-enter) plus a 1s background
-poll, so the prompt appears on its own even while you sit idle.
+poll, so the pending list updates on its own even while you sit idle.
 
 It also watches the whole project (`watch_cwd`): external changes and new
-files that aren't open in a buffer get an open / diff / dismiss prompt,
-respecting `.gitignore` (plus `node_modules`, `.DS_Store`, `*.log`).
+files that aren't open in a buffer appear in the same changes tab, respecting
+`.gitignore` (plus `node_modules`, `.DS_Store`, `*.log`).
 
 Provided by [watcher.nvim](https://github.com/jgYro/watcher.nvim) (extracted
 from this config); configured in `lua/plugin_config/watcher.lua`.

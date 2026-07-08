@@ -73,35 +73,64 @@ local function configure_window(win)
   vim.wo[win].winhl = "Normal:NormalFloat,FloatBorder:FloatBorder"
 end
 
-function M.toggle(opts)
+function M.hide(key)
+  local term = terminals[key]
+  if term and valid_win(term.win) then
+    vim.api.nvim_win_close(term.win, true)
+    term.win = nil
+    return true
+  end
+
+  return false
+end
+
+function M.is_open(key)
+  local term = terminals[key]
+  return term and valid_win(term.win) or false
+end
+
+function M.get(key)
+  return terminals[key]
+end
+
+function M.open(opts)
   opts = opts or {}
 
   local cmd = opts.cmd or vim.o.shell
   local key = opts.key or command_label(cmd)
   local term = terminals[key]
 
-  if term and valid_win(term.win) then
-    vim.api.nvim_win_close(term.win, true)
-    term.win = nil
-    return
-  end
-
   if not term then
-    term = {}
+    term = { key = key }
     terminals[key] = term
   end
 
-  if term.exited or not valid_buf(term.buf) then
+  term.cmd = cmd
+
+  if not valid_buf(term.buf) or (term.exited and not opts.preserve_on_exit) then
     term.buf = vim.api.nvim_create_buf(false, true)
     term.exited = false
     term.started = false
     configure_buffer(term.buf)
+
+    if type(opts.on_create) == "function" then
+      opts.on_create(term.buf, term)
+    end
   end
 
-  term.win = vim.api.nvim_open_win(term.buf, true, centered_float_config(opts))
+  if valid_win(term.win) then
+    vim.api.nvim_set_current_win(term.win)
+  else
+    term.win = vim.api.nvim_open_win(term.buf, true, centered_float_config(opts))
+  end
+
   configure_window(term.win)
 
-  if not term.started then
+  if type(opts.on_open) == "function" then
+    opts.on_open(term.win, term.buf, term)
+  end
+
+  if not term.started and not term.exited then
     term.started = true
     local ok, job_id = pcall(vim.fn.jobstart, cmd, {
       term = true,
@@ -111,24 +140,50 @@ function M.toggle(opts)
         term.job_id = nil
 
         if type(opts.on_exit) == "function" then
-          opts.on_exit(code)
+          opts.on_exit(code, term)
         end
       end,
     })
 
-    if not ok or job_id <= 0 then
+    if not ok or type(job_id) ~= "number" or job_id <= 0 then
       term.started = false
       term.exited = true
       vim.notify("Failed to start floating terminal command: " .. command_label(cmd), vim.log.levels.ERROR)
       pcall(vim.api.nvim_win_close, term.win, true)
       term.win = nil
+
+      if type(opts.on_fail) == "function" then
+        opts.on_fail(term)
+      end
+
       return
     end
 
     term.job_id = job_id
+
+    if type(opts.on_start) == "function" then
+      opts.on_start(job_id, term)
+    end
   end
 
-  vim.cmd.startinsert()
+  if opts.startinsert ~= false and not term.exited then
+    vim.cmd.startinsert()
+  end
+
+  return term
+end
+
+function M.toggle(opts)
+  opts = opts or {}
+
+  local cmd = opts.cmd or vim.o.shell
+  local key = opts.key or command_label(cmd)
+
+  if M.hide(key) then
+    return
+  end
+
+  return M.open(opts)
 end
 
 return M
