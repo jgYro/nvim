@@ -18,6 +18,10 @@ vim.keymap.set("n", "<C-u>", "<C-u>zz")
 vim.keymap.set("n", "n", "nzzzv")
 vim.keymap.set("n", "N", "Nzzzv")
 
+-- Default fold collapse. <C-l> stays owned by Harpoon globally; fold-oriented
+-- views can override it buffer-locally for expand-all.
+vim.keymap.set("n", "<C-h>", "zM", { desc = "Collapse all folds" })
+
 -- Match tmux pane resizing: <C-w> + Shift-H/J/K/L starts a short repeat window,
 -- so additional H/J/K/L presses resize without typing <C-w> again.
 local resize_step = 5

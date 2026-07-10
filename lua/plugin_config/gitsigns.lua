@@ -33,7 +33,7 @@ require("gitsigns").setup({
     -- Jump between hunks (git changes). Bound both the Vim-idiomatic ]c/[c
     -- and the Lg/Hg forms matching our Lq/Hq quickfix idiom (L = forward,
     -- H = back; g = git). Buffer-local, since hunks only exist in tracked
-    -- files. (Lc/Hc are now treesitter class motions -- see treesitter.lua.)
+    -- files. (Lc/Hc are treesitter class motions -- see treesitter.lua.)
     map("n", "]c", function() gs.nav_hunk("next") end, "Gitsigns: next hunk")
     map("n", "[c", function() gs.nav_hunk("prev") end, "Gitsigns: prev hunk")
     map("n", "Lg", function() gs.nav_hunk("next") end, "Next git change (hunk)")

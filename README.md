@@ -74,13 +74,21 @@ Leader is `<Space>`.
 | `<leader>uk`              | n    | Show Codex workspace overview                 |
 | `<leader>uj`              | n    | Show watcher changed files                    |
 | `<leader>uA`              | n    | Toggle watcher auto-accept                    |
-| `<C-h>` / `<C-l>`         | n, t | Previous / next Codex workspace session       |
 | `<C-k>` / `<C-j>`         | n, t | Previous / next Codex workspace view          |
 | `<C-o>`                   | n, t | Close Codex workspace and return to main buffer |
 | `<C-u>`                   | t    | Exit terminal mode                            |
+| `<leader>ss`              | n    | Query cheat.sh                                |
+| `<leader>sw`              | n    | Query cheat.sh for the word under cursor      |
+| `<leader>sf`              | n    | Query cheat.sh for the current filetype       |
 | `Lq` / `Hq`               | n    | Next / previous quickfix entry                |
 | `<leader><leader>w`       | n    | Toggle word wrap                              |
 | `<A-BS>`                  | i    | Delete the word before the cursor             |
+
+`<leader>ss` infers the current filetype without showing it in the prompt, so
+in a Go buffer you type `interface` and it queries `go/interface`. Results are
+rendered in a foldfloat popup as markdown with syntax-highlighted fenced code
+blocks; use `n` / `p` to jump and open sections, `<C-n>` / `<C-p>` to move
+between sections, and `q` to close.
 
 ### Telescope (`<leader>f`)
 
@@ -98,11 +106,9 @@ Leader is `<Space>`.
 | Key                                   | Action                       |
 | ------------------------------------- | ---------------------------- |
 | `<leader>a`                           | Add current file to the list |
-| `<leader>e`                           | Toggle the harpoon menu      |
-| `<C-j>` / `<C-k>` / `<C-l>` / `<C-;>` | Jump to file 1 / 2 / 3 / 4   |
-
-> `<C-;>` only works in GUI clients or terminals that support the kitty
-> keyboard protocol; most plain terminals can't send it.
+| `<C-e>`                               | Toggle the harpoon menu      |
+| `<C-j>` / `<C-k>` / `<C-l>`           | Jump to file 1 / 2 / 3       |
+| `<C-b>` / `<C-f>`                     | Jump to file 4 / 5           |
 
 ### Flash (motion)
 
@@ -207,9 +213,12 @@ instead of popping a separate watcher UI over an active Codex terminal
 Open changes with `<leader>w`, `<leader>uj`, or by cycling workspace views with
 `<C-j>` / `<C-k>`. The Codex workspace has `terminal`, `overview`, `sessions`,
 and `changes` views; the terminal view is the live Codex terminal buffer, not a
-dashboard layered over it. Session IDs are numbered `0`, `1`, `2`, etc. in the
-status line; `busy:N` marks a running session, `ask:N` marks one waiting on
-input, and `done:N` briefly marks one that just went idle after output.
+dashboard layered over it. Inside Codex buffers, `Hc` / `Lc` temporarily switch
+sessions; outside Codex they remain Treesitter class motions. In the changes
+view, `<C-h>` / `<C-l>` collapse / expand all changed-file folds.
+Session IDs are numbered `0`, `1`, `2`, etc. in the status line; `busy:N` marks
+a running session, `ask:N` marks one waiting on input, and `done:N` briefly
+marks one that just went idle after output.
 The idle threshold is `status.idle_ms` in `lua/plugin_config/watcher.lua`.
 
 - **`a` Accept** → take the change (reloads the buffer from disk). The buffer

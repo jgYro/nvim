@@ -37,6 +37,7 @@ require("treesitter-modules").setup({
     "markdown", "markdown_inline",
     "bash", "json", "yaml",
     "nim",
+    "templ",
     "diff", -- colours the ```diff blocks in the <leader>hc commit view
   },
   auto_install = true, -- install missing parsers when entering a buffer
@@ -54,6 +55,14 @@ require("treesitter-modules").setup({
       node_decremental = "<A-p>",
     },
   },
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+  group = vim.api.nvim_create_augroup("treesitter_templ", { clear = true }),
+  pattern = "templ",
+  callback = function()
+    vim.treesitter.start()
+  end,
 })
 
 -- Textobjects (main branch): keymaps are defined by hand against the new API.

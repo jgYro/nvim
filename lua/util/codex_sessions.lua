@@ -8,6 +8,7 @@ local INPUT_ECHO_SUPPRESS_MS = 350
 local INPUT_SUBMIT_ECHO_SUPPRESS_MS = 120
 local INPUT_TAIL_LINES = 12
 local VIEW_ORDER = { "terminal", "overview", "sessions", "changes" }
+local CHANGE_SECTION_PATTERN = "^## %[%d+%]"
 
 M.config = {
   cmd = "codex",
@@ -73,6 +74,31 @@ end
 
 local function valid_win(win)
   return win and vim.api.nvim_win_is_valid(win)
+end
+
+local function hl(name)
+  local ok, value = pcall(vim.api.nvim_get_hl, 0, { name = name, link = false })
+  return ok and value or {}
+end
+
+local function hex_color(value)
+  if type(value) ~= "number" then
+    return nil
+  end
+
+  return ("#%06x"):format(value)
+end
+
+local function ensure_workspace_highlights()
+  local normal = hl("Normal")
+  local border = hl("FloatBorder")
+  local fg = hex_color(normal.fg) or "#d1d5db"
+  local bg = hex_color(normal.bg) or "#0f1117"
+  local border_fg = hex_color(border.fg) or "#6b7280"
+
+  vim.api.nvim_set_hl(0, "CodexWorkspaceNormal", { fg = fg, bg = bg })
+  vim.api.nvim_set_hl(0, "CodexWorkspaceBorder", { fg = border_fg, bg = bg })
+  vim.api.nvim_set_hl(0, "CodexWorkspaceTitle", { fg = fg, bg = bg, bold = true })
 end
 
 local function relpath(path)
@@ -568,12 +594,53 @@ local function configure_body_buf(buf, filetype)
 end
 
 local function configure_workspace_win(win, is_header)
+  ensure_workspace_highlights()
   vim.wo[win].number = false
   vim.wo[win].relativenumber = false
   vim.wo[win].signcolumn = "no"
   vim.wo[win].wrap = not is_header
   vim.wo[win].cursorline = not is_header
-  vim.wo[win].winhl = "Normal:NormalFloat,FloatBorder:FloatBorder"
+  vim.wo[win].winblend = 0
+  vim.wo[win].winhl = table.concat({
+    "Normal:CodexWorkspaceNormal",
+    "NormalFloat:CodexWorkspaceNormal",
+    "FloatBorder:CodexWorkspaceBorder",
+    "FloatTitle:CodexWorkspaceTitle",
+    "EndOfBuffer:CodexWorkspaceNormal",
+  }, ",")
+end
+
+function M.changes_foldexpr()
+  local line = vim.fn.getline(vim.v.lnum)
+  if line:match("^#%s+") then
+    return "0"
+  end
+  if line:match(CHANGE_SECTION_PATTERN) then
+    return ">1"
+  end
+  return "="
+end
+
+function M.changes_foldtext()
+  local line = vim.fn.getline(vim.v.foldstart):gsub("^##%s*", "")
+  local folded = math.max(0, vim.v.foldend - vim.v.foldstart)
+  return ("+ %s  (%d lines)"):format(line, folded)
+end
+
+local function configure_workspace_folds(win, view)
+  if view == "changes" then
+    vim.wo[win].foldmethod = "expr"
+    vim.wo[win].foldexpr = "v:lua.require('util.codex_sessions').changes_foldexpr()"
+    vim.wo[win].foldtext = "v:lua.require('util.codex_sessions').changes_foldtext()"
+    vim.wo[win].foldenable = true
+    vim.wo[win].foldlevel = 0
+    return
+  end
+
+  vim.wo[win].foldenable = false
+  vim.wo[win].foldmethod = "manual"
+  vim.wo[win].foldexpr = "0"
+  vim.wo[win].foldtext = "foldtext()"
 end
 
 local function workspace_geometry()
@@ -594,7 +661,7 @@ local function workspace_geometry()
       col = col,
       row = row,
       style = "minimal",
-      zindex = 50,
+      zindex = 60,
     },
     body = {
       relative = "editor",
@@ -818,7 +885,7 @@ function M.render_header()
   end
 
   append(
-    (" | chg:%d auto:%s | C-h/l sess C-j/k view C-o back"):format(
+    (" | chg:%d auto:%s | Hc/Lc sess C-j/k view C-o back"):format(
       changes,
       M.config.watcher.auto_accept and "on" or "off"
     )
@@ -845,8 +912,8 @@ local function configure_view_maps(buf)
   vim.keymap.set("n", "<C-o>", close_workspace, { buffer = buf, nowait = true, silent = true, desc = "Codex: return to main buffer" })
   vim.keymap.set("n", "<C-j>", M.next_view, { buffer = buf, nowait = true, silent = true, desc = "Codex: next view" })
   vim.keymap.set("n", "<C-k>", M.prev_view, { buffer = buf, nowait = true, silent = true, desc = "Codex: previous view" })
-  vim.keymap.set("n", "<C-l>", M.next, { buffer = buf, nowait = true, silent = true, desc = "Codex: next session" })
-  vim.keymap.set("n", "<C-h>", M.prev, { buffer = buf, nowait = true, silent = true, desc = "Codex: previous session" })
+  vim.keymap.set("n", "Lc", M.next, { buffer = buf, nowait = true, silent = true, desc = "Codex: next session" })
+  vim.keymap.set("n", "Hc", M.prev, { buffer = buf, nowait = true, silent = true, desc = "Codex: previous session" })
   vim.keymap.set("n", "<CR>", M.open_selected, { buffer = buf, nowait = true, silent = true, desc = "Codex: open selected item" })
   vim.keymap.set("n", "o", M.open_selected, { buffer = buf, nowait = true, silent = true, desc = "Codex: open selected item" })
   vim.keymap.set("n", "a", function()
@@ -866,6 +933,18 @@ local function configure_view_maps(buf)
     M.toggle_watcher_auto_accept()
     M.show_view(workspace.view)
   end, { buffer = buf, nowait = true, silent = true, desc = "Watcher: toggle auto-accept" })
+end
+
+local function configure_view_mode_maps(buf, view)
+  pcall(vim.keymap.del, "n", "<C-h>", { buffer = buf })
+  pcall(vim.keymap.del, "n", "<C-l>", { buffer = buf })
+
+  if view ~= "changes" then
+    return
+  end
+
+  vim.keymap.set("n", "<C-h>", "zM", { buffer = buf, nowait = true, silent = true, desc = "Codex changes: collapse all folds" })
+  vim.keymap.set("n", "<C-l>", "zR", { buffer = buf, nowait = true, silent = true, desc = "Codex changes: expand all folds" })
 end
 
 local function configure_session_buffer(session)
@@ -888,20 +967,8 @@ local function configure_session_buffer(session)
     silent = true,
     desc = "Codex: return to main buffer",
   })
-  vim.keymap.set("n", "<C-l>", M.next, { buffer = buf, nowait = true, silent = true, desc = "Codex: next session" })
-  vim.keymap.set("t", "<C-l>", "<C-\\><C-n><cmd>lua require('util.codex_sessions').next()<cr>", {
-    buffer = buf,
-    nowait = true,
-    silent = true,
-    desc = "Codex: next session",
-  })
-  vim.keymap.set("n", "<C-h>", M.prev, { buffer = buf, nowait = true, silent = true, desc = "Codex: previous session" })
-  vim.keymap.set("t", "<C-h>", "<C-\\><C-n><cmd>lua require('util.codex_sessions').prev()<cr>", {
-    buffer = buf,
-    nowait = true,
-    silent = true,
-    desc = "Codex: previous session",
-  })
+  vim.keymap.set("n", "Lc", M.next, { buffer = buf, nowait = true, silent = true, desc = "Codex: next session" })
+  vim.keymap.set("n", "Hc", M.prev, { buffer = buf, nowait = true, silent = true, desc = "Codex: previous session" })
   vim.keymap.set("n", "<C-j>", M.next_view, { buffer = buf, nowait = true, silent = true, desc = "Codex: next view" })
   vim.keymap.set("t", "<C-j>", "<C-\\><C-n><cmd>lua require('util.codex_sessions').next_view()<cr>", {
     buffer = buf,
@@ -1138,11 +1205,13 @@ end
 local function render_body(lines, filetype)
   ensure_workspace()
   configure_view_maps(workspace.body_buf)
+  configure_view_mode_maps(workspace.body_buf, workspace.view)
   set_lines(workspace.body_buf, lines, filetype or "markdown")
   vim.api.nvim_win_set_buf(workspace.body_win, workspace.body_buf)
   vim.api.nvim_set_current_win(workspace.body_win)
   pcall(vim.api.nvim_win_set_cursor, workspace.body_win, { 1, 0 })
   configure_workspace_win(workspace.body_win, false)
+  configure_workspace_folds(workspace.body_win, workspace.view)
   M.render_header()
 end
 
@@ -1205,6 +1274,7 @@ function M.show_terminal(index)
   suppress_focus_activity(session)
   vim.api.nvim_win_set_buf(workspace.body_win, session.buf)
   configure_workspace_win(workspace.body_win, false)
+  configure_workspace_folds(workspace.body_win, "terminal")
   start_session(session)
   vim.api.nvim_set_current_win(workspace.body_win)
   M.render_header()

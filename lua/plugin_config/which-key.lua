@@ -29,7 +29,7 @@ wk.setup({
 })
 
 -- Group labels for the L / H jump prefixes (normal mode). L = jump forward,
--- H = jump back. The actual mappings (Lq/Hq quickfix, Lc/Hc git change) carry
+-- H = jump back. The actual mappings (Lq/Hq quickfix, Lc/Hc class) carry
 -- their own desc; these just label the prefix node in the popup. Registering
 -- the group does not create a mapping, so the default L/H screen-motion still
 -- fires if you stop after the single key.
