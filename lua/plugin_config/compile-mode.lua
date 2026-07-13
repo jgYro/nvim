@@ -30,7 +30,6 @@ vim.g.compile_mode = {
 }
 
 local compile_mode = require("compile-mode")
-local compile_utils = require("compile-mode.utils")
 local compile_buffer_fraction = 0.25
 
 local function compile_window_height()
@@ -66,17 +65,8 @@ local function compile_params()
 end
 
 local function compile_prompt()
-  local original_input = compile_utils.input
-
-  compile_utils.input = function(opts)
-    compile_utils.input = original_input
-    opts = vim.tbl_extend("force", opts or {}, { default = "" })
-    local command = original_input(opts)
-    resize_compilation_soon()
-    return command
-  end
-
   compile_mode.compile(compile_params())
+  resize_compilation_soon()
 end
 
 local function recompile()

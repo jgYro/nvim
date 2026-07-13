@@ -42,9 +42,30 @@ local function on_attach(bufnr)
   vim.keymap.set("n", "P", preview.watch, opts("Preview (watch)"))
   vim.keymap.set("n", "<Esc>", preview.unwatch, opts("Close preview / unwatch"))
 
-  -- Scroll the preview float without leaving the tree.
-  vim.keymap.set("n", "<C-d>", function() preview.scroll(4) end, opts("Scroll preview down"))
-  vim.keymap.set("n", "<C-u>", function() preview.scroll(-4) end, opts("Scroll preview up"))
+  -- C-d/C-u: while a preview float is open (e.g. after P watch mode), scroll
+  -- the preview half a page; otherwise scroll the tree with the usual centered
+  -- half-page motion. preview.scroll() returns false when no preview is open.
+  local function preview_half_page(direction)
+    local ok, mgr = pcall(require, "nvim-tree-preview.manager")
+    local half = 10
+    if ok and mgr.instance and mgr.instance:is_valid() then
+      local win = mgr.instance.preview_win
+      if win and vim.api.nvim_win_is_valid(win) then
+        half = math.max(1, math.floor(vim.api.nvim_win_get_height(win) / 2))
+      end
+    end
+    return preview.scroll(direction * half)
+  end
+  vim.keymap.set("n", "<C-d>", function()
+    if not preview_half_page(1) then
+      vim.cmd("normal! " .. vim.api.nvim_replace_termcodes("<C-d>zz", true, false, true))
+    end
+  end, opts("Scroll preview / tree down"))
+  vim.keymap.set("n", "<C-u>", function()
+    if not preview_half_page(-1) then
+      vim.cmd("normal! " .. vim.api.nvim_replace_termcodes("<C-u>zz", true, false, true))
+    end
+  end, opts("Scroll preview / tree up"))
 
   -- Horizontal scroll: the preview API only scrolls vertically, so we nudge the
   -- preview window's leftcol directly (works because the preview is nowrap).

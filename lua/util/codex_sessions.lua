@@ -885,7 +885,7 @@ function M.render_header()
   end
 
   append(
-    (" | chg:%d auto:%s | Hc/Lc sess C-j/k view C-o back"):format(
+    (" | chg:%d auto:%s | Hc/Lc sess n:C-j/k view C-o back"):format(
       changes,
       M.config.watcher.auto_accept and "on" or "off"
     )
@@ -970,19 +970,7 @@ local function configure_session_buffer(session)
   vim.keymap.set("n", "Lc", M.next, { buffer = buf, nowait = true, silent = true, desc = "Codex: next session" })
   vim.keymap.set("n", "Hc", M.prev, { buffer = buf, nowait = true, silent = true, desc = "Codex: previous session" })
   vim.keymap.set("n", "<C-j>", M.next_view, { buffer = buf, nowait = true, silent = true, desc = "Codex: next view" })
-  vim.keymap.set("t", "<C-j>", "<C-\\><C-n><cmd>lua require('util.codex_sessions').next_view()<cr>", {
-    buffer = buf,
-    nowait = true,
-    silent = true,
-    desc = "Codex: next view",
-  })
   vim.keymap.set("n", "<C-k>", M.prev_view, { buffer = buf, nowait = true, silent = true, desc = "Codex: previous view" })
-  vim.keymap.set("t", "<C-k>", "<C-\\><C-n><cmd>lua require('util.codex_sessions').prev_view()<cr>", {
-    buffer = buf,
-    nowait = true,
-    silent = true,
-    desc = "Codex: previous view",
-  })
 end
 
 local function attach_activity(session)

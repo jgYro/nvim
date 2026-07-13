@@ -31,10 +31,10 @@ local resize_repeat_active = false
 local resize_repeat_saved_maps = {}
 
 local resize_directions = {
-  H = { command = "vertical resize +" .. resize_step, desc = "Resize window right" },
-  J = { command = "resize +" .. resize_step, desc = "Resize window down" },
-  K = { command = "resize -" .. resize_step, desc = "Resize window up" },
-  L = { command = "vertical resize -" .. resize_step, desc = "Resize window left" },
+  H = { command = "vertical resize -" .. resize_step, desc = "Resize window left" },
+  J = { command = "resize -" .. resize_step, desc = "Resize window up" },
+  K = { command = "resize +" .. resize_step, desc = "Resize window down" },
+  L = { command = "vertical resize +" .. resize_step, desc = "Resize window right" },
 }
 
 local function stop_resize_repeat()

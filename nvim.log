@@ -1,0 +1,3 @@
+WRN 2026-07-10T20:41:35.493 ?.13807    server_start:197: Failed to start server: operation not permitted: /var/folders/rx/3b8_j7q57gq830tyrq5w79xc0000gn/T/nvim.jerichogregory/UI37CI/nvim.13807.0
+WRN 2026-07-10T21:00:40.486 ?.19989    server_start:197: Failed to start server: operation not permitted: /var/folders/rx/3b8_j7q57gq830tyrq5w79xc0000gn/T/nvim.jerichogregory/kUBHNp/nvim.19989.0
+WRN 2026-07-10T21:01:22.064 ?.20573    server_start:197: Failed to start server: operation not permitted: /var/folders/rx/3b8_j7q57gq830tyrq5w79xc0000gn/T/nvim.jerichogregory/wwP0RJ/nvim.20573.0

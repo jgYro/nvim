@@ -11,16 +11,20 @@
 
 local codex_sessions = require("util.codex_sessions")
 
--- Open a terminal in a vertical split on the right, in insert mode.
+-- Open a terminal in a vertical split on the right, sized to 20% of the
+-- screen width, in insert mode.
 vim.keymap.set("n", "<leader>uu", function()
   vim.cmd.vnew()
+  vim.cmd("vertical resize " .. math.floor(vim.o.columns * 0.2))
   vim.cmd.term()
   vim.cmd.startinsert()
 end, { desc = "Terminal: vertical split" })
 
--- Open a terminal in a horizontal split below, in insert mode.
+-- Open a terminal in a horizontal split below, sized to 20% of the screen
+-- height, in insert mode.
 vim.keymap.set("n", "<leader>uU", function()
   vim.cmd.split()
+  vim.cmd("resize " .. math.floor(vim.o.lines * 0.2))
   vim.cmd.term()
   vim.cmd.startinsert()
 end, { desc = "Terminal: horizontal split" })

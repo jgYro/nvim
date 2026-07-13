@@ -74,7 +74,7 @@ Leader is `<Space>`.
 | `<leader>uk`              | n    | Show Codex workspace overview                 |
 | `<leader>uj`              | n    | Show watcher changed files                    |
 | `<leader>uA`              | n    | Toggle watcher auto-accept                    |
-| `<C-k>` / `<C-j>`         | n, t | Previous / next Codex workspace view          |
+| `<C-k>` / `<C-j>`         | n    | Previous / next Codex workspace view          |
 | `<C-o>`                   | n, t | Close Codex workspace and return to main buffer |
 | `<C-u>`                   | t    | Exit terminal mode                            |
 | `<leader>ss`              | n    | Query cheat.sh                                |
@@ -211,11 +211,13 @@ instead of popping a separate watcher UI over an active Codex terminal
 (`autoread` is off, so nothing reloads silently).
 
 Open changes with `<leader>w`, `<leader>uj`, or by cycling workspace views with
-`<C-j>` / `<C-k>`. The Codex workspace has `terminal`, `overview`, `sessions`,
-and `changes` views; the terminal view is the live Codex terminal buffer, not a
-dashboard layered over it. Inside Codex buffers, `Hc` / `Lc` temporarily switch
-sessions; outside Codex they remain Treesitter class motions. In the changes
-view, `<C-h>` / `<C-l>` collapse / expand all changed-file folds.
+normal-mode `<C-j>` / `<C-k>`. The Codex workspace has `terminal`, `overview`,
+`sessions`, and `changes` views; the terminal view is the live Codex terminal
+buffer, not a dashboard layered over it. Terminal-mode `<C-j>` is left to Codex
+so Shift-Enter can insert a prompt newline. Inside Codex buffers, `Hc` / `Lc`
+temporarily switch sessions; outside Codex they remain Treesitter class
+motions. In the changes view, `<C-h>` / `<C-l>` collapse / expand all
+changed-file folds.
 Session IDs are numbered `0`, `1`, `2`, etc. in the status line; `busy:N` marks
 a running session, `ask:N` marks one waiting on input, and `done:N` briefly
 marks one that just went idle after output.
